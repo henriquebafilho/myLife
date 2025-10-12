@@ -7,7 +7,7 @@ let cds = [
     {
         banda: "AC/DC",
         ano: 1976,
-        album: "DIRTY DEEDS DONE DIRT CHEAP"
+        album: "Dirty Deeds Done Dirt Cheap"
     },
     {
         banda: "AC/DC",
@@ -287,7 +287,7 @@ let cds = [
     {
         banda: "Death",
         ano: 1988,
-        album: "LEPROSY"
+        album: "Leprosy"
     },
     {
         banda: "Death",
