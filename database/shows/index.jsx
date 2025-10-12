@@ -190,7 +190,7 @@ let shows = [
     },
     {
         evento: "Turnê Pior Cenário Possível",
-        bandas: "Matanza",
+        bandas: ["Matanza"],
         data: "31/10/2015",
         local: "Imperator"
     },
