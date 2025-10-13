@@ -20,7 +20,7 @@ function Row(props) {
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                 <TableCell align="center">
                     <img
-                        src={'../../../database/cds/Capas/' + getCDName(row.banda + " - " + row.album) + '.png'}
+                        src={'../../../database/cds/Capas/' + getCDName(row.banda + " - " + row.album) + '.png' || '../../../database/cds/Capas/Metallica - Master of Puppets.png'}
                         width={150}
                         height={150}
                         title={getCDName(row.banda + " - " + row.album)}
