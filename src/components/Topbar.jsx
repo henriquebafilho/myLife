@@ -56,8 +56,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function PersistentDrawerLeft() {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
-    const primaryColor = "#030348";
-    const secondaryColor = "white";
     const profileOptions = [{ title: 'Perfil', icon: <PersonIcon /> }];
     const aboutMe = [
         { title: 'Jogos do Botafogo', icon: <StadiumIcon /> },

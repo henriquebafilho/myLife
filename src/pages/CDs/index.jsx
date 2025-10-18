@@ -41,9 +41,9 @@ function Row(props) {
                 </TableCell>
                 <TableCell align="left">
                     <div>
-                        <div>{row.banda}</div>
-                        <div>{row.album}</div>
-                        <div>{row.ano}</div>
+                        <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>{row.banda}</div>
+                        <div style={{ marginBottom: '10px' }}>{row.album}</div>
+                        <div style={{ marginBottom: '10px' }}>{row.ano}</div>
                     </div>
                 </TableCell>
             </TableRow>
@@ -70,21 +70,23 @@ function Row(props) {
 }
 
 export default function CDs() {
-    return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center">Capa</TableCell>
-                        <TableCell align="start">Informações</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {cds.map((cd) => (
-                        <Row key={cd.banda + cd.album} row={cd} />
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+    return (<>
+        <div style={{ margin: '100px 0 50px 0' }}>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">Capa</TableCell>
+                            <TableCell align="start">Informações</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {cds.map((cd) => (
+                            <Row key={cd.banda + cd.album} row={cd} />
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+    </>);
 }

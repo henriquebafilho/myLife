@@ -97,7 +97,7 @@ let cds = [
     {
         banda: "Alice in Chains",
         ano: 1996,
-        album: "Unplugged"
+        album: "MTV Unplugged"
     },
     {
         banda: "Alice in Chains",
@@ -227,7 +227,7 @@ let cds = [
     {
         banda: "Cannibal Corpse",
         ano: 2014,
-        album: "A Skeleta Domain"
+        album: "A Skeletal Domain"
     },
     {
         banda: "Claustrofobia",
