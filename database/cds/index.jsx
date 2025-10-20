@@ -312,7 +312,7 @@ let cds = [
     {
         banda: "Dio",
         ano: 1983,
-        album: "At Donington UK: Live 1983 & 1987"
+        album: "At Donington UK - Live 1983 & 1987"
     },
     {
         banda: "Dio",
@@ -337,7 +337,7 @@ let cds = [
     {
         banda: "Exodus",
         ano: 1990,
-        album: "Impact is Imminnent"
+        album: "Impact is Imminent"
     },
     {
         banda: "Exodus",
@@ -352,10 +352,10 @@ let cds = [
     {
         banda: "Exodus",
         ano: 2014,
-        album: "Blood In, Blood Out"
+        album: "Blood In Blood Out"
     },
     {
-        banda: "Faith no More",
+        banda: "Faith No More",
         ano: 1992,
         album: "Angel Dust"
     },

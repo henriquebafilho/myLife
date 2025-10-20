@@ -26,23 +26,25 @@ function Row(props) {
 }
 
 export default function Shows() {
-  return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Evento</TableCell>
-            <TableCell>Bandas</TableCell>
-            <TableCell align="center">Data</TableCell>
-            <TableCell align="center">Local</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {shows.map((show) => (
-            <Row key={show.evento + show.data} row={show} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+  return (<>
+    <div style={{ margin: '100px 0 50px 0' }}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Evento</TableCell>
+              <TableCell>Bandas</TableCell>
+              <TableCell align="center">Data</TableCell>
+              <TableCell align="center">Local</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {shows.reverse().map((show) => (
+              <Row key={show.evento + show.data} row={show} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  </>);
 }

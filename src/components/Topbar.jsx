@@ -20,6 +20,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import StadiumIcon from '@mui/icons-material/Stadium';
 import MusicNote from '@mui/icons-material/MusicNote';
 import Album from '@mui/icons-material/Album';
+import CDs from '../pages/CDs/index';
+//import Jogos from '../pages/Jogos/index';
+import Shows from '../pages/Shows/index';
 
 const drawerWidth = 240;
 
@@ -45,6 +48,12 @@ const AppBar = styled(MuiAppBar, {
     ],
 }));
 
+const screenMap = {
+    cds: CDs,
+    //jogos: Jogos,
+    shows: Shows
+};
+
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -56,12 +65,19 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function PersistentDrawerLeft() {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
-    const profileOptions = [{ title: 'Perfil', icon: <PersonIcon /> }];
+    const [currentScreen, setCurrentScreen] = useState('cds');
+    const profileOptions = [/* { title: 'Perfil', key: 'perfil', icon: <PersonIcon /> } */];
     const aboutMe = [
-        { title: 'Jogos do Botafogo', icon: <StadiumIcon /> },
-        { title: 'Shows', icon: <MusicNote /> },
-        { title: 'CDs', icon: <Album /> }
+        //{ title: 'Jogos do Botafogo', key: 'jogos', icon: <StadiumIcon /> },
+        { title: 'Shows', key: 'shows', icon: <MusicNote /> },
+        { title: 'CDs', key: 'cds', icon: <Album /> }
     ];
+
+    const handleItemClick = (screenKey) => {
+        setCurrentScreen(screenKey);
+    };
+
+    const CurrentContent = screenMap[currentScreen];
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -71,7 +87,7 @@ export default function PersistentDrawerLeft() {
         setOpen(false);
     };
 
-    return (
+    return (<>
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
@@ -116,7 +132,7 @@ export default function PersistentDrawerLeft() {
                 <Divider />
                 <List>
                     {profileOptions.map((option) => (
-                        <ListItem key={option.title} disablePadding>
+                        <ListItem key={option.key} disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>
                                     {option.icon}
@@ -129,8 +145,11 @@ export default function PersistentDrawerLeft() {
                 <Divider />
                 <List>
                     {aboutMe.map((option) => (
-                        <ListItem key={option.title} disablePadding>
-                            <ListItemButton>
+                        <ListItem key={option.key} disablePadding>
+                            <ListItemButton
+                                onClick={() => handleItemClick(option.key)}
+                                selected={currentScreen === option.key}
+                            >
                                 <ListItemIcon>
                                     {option.icon}
                                 </ListItemIcon>
@@ -141,5 +160,6 @@ export default function PersistentDrawerLeft() {
                 </List>
             </Drawer>
         </Box>
-    );
+        <CurrentContent />
+    </>);
 }
