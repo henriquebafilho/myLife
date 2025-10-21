@@ -1046,6 +1046,15 @@ let shows = [
         ],
         data: "26/09/2025",
         local: "Jockey Club"
+    },
+    {
+        evento: "Clássicos do Brasil",
+        bandas: [
+            "Plebe Rude",
+            "Ira!"
+        ],
+        data: "18/10/2025",
+        local: "Marina da Glória"
     }
 ];
 
