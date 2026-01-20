@@ -1050,12 +1050,58 @@ let shows = [
     {
         evento: "Clássicos do Brasil",
         bandas: [
-            "Plebe Rude",
-            "Ira!"
+            "Ira!",
+            "Plebe Rude"
         ],
         data: "18/10/2025",
         local: "Marina da Glória"
-    }
+    },
+    {
+        evento: "Gravação DVD Black Pantera",
+        bandas: [
+            "Black Pantera",
+            "Punho de Mahin"
+        ],
+        data: "19/11/2025",
+        local: "Circo Voador"
+    },
+    {
+        evento: "Live '25",
+        bandas: [
+            "Oasis",
+            "Richard Ashcroft"
+        ],
+        data: "22/11/2025",
+        local: "Morumbi"
+    },
+    {
+        evento: "Noites de Verão",
+        bandas: [
+            "Raimundos",
+            "CPM 22"
+        ],
+        data: "13/12/2025",
+        local: "Morro da Urca"
+    },
+    {
+        evento: "Loserville",
+        bandas: [
+            "Limp Bizkit",
+            "Bullet For My Valentine"
+        ],
+        data: "20/12/2025",
+        local: "Allianz Parque"
+    },
+    {
+        evento: "Afasia 20 Anos",
+        bandas: [
+            "Dead Fish",
+            "Zander",
+            "Bullet Bane"
+        ],
+        data: "16/01/2026",
+        local: "Circo Voador"
+    },
 ];
 
 export default shows;

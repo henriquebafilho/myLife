@@ -26,6 +26,13 @@ function Row(props) {
 }
 
 export default function Shows() {
+  const sortedShows = shows.sort((a, b) => {
+    const dataA = a.data.split('/').reverse().join('');
+    const dataB = b.data.split('/').reverse().join('');
+
+    return dataB.localeCompare(dataA);
+  });
+
   return (<>
     <div style={{ margin: '100px 0 50px 0' }}>
       <TableContainer component={Paper}>
@@ -39,7 +46,7 @@ export default function Shows() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {shows.reverse().map((show) => (
+            {sortedShows.map((show) => (
               <Row key={show.evento + show.data} row={show} />
             ))}
           </TableBody>
