@@ -21,7 +21,7 @@ import StadiumIcon from '@mui/icons-material/Stadium';
 import MusicNote from '@mui/icons-material/MusicNote';
 import Album from '@mui/icons-material/Album';
 import CDs from '../pages/CDs/index';
-//import Jogos from '../pages/Jogos/index';
+import Jogos from '../pages/Jogos/index';
 import Shows from '../pages/Shows/index';
 
 const drawerWidth = 240;
@@ -50,7 +50,7 @@ const AppBar = styled(MuiAppBar, {
 
 const screenMap = {
     cds: CDs,
-    //jogos: Jogos,
+    jogos: Jogos,
     shows: Shows
 };
 
@@ -68,7 +68,7 @@ export default function PersistentDrawerLeft() {
     const [currentScreen, setCurrentScreen] = useState('cds');
     const profileOptions = [/* { title: 'Perfil', key: 'perfil', icon: <PersonIcon /> } */];
     const aboutMe = [
-        //{ title: 'Jogos do Botafogo', key: 'jogos', icon: <StadiumIcon /> },
+        { title: 'Jogos do Botafogo', key: 'jogos', icon: <StadiumIcon /> },
         { title: 'Shows', key: 'shows', icon: <MusicNote /> },
         { title: 'CDs', key: 'cds', icon: <Album /> }
     ];

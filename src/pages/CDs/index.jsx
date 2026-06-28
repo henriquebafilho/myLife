@@ -31,7 +31,7 @@ function Row(props) {
                 <TableCell align="center">
                     <Button onClick={() => setOpenModal(true)}>
                         <img
-                            src={'../../../database/cds/Capas/' + getCDName(row.banda + " - " + row.album) + '.png' || '../../../database/cds/Capas/Metallica - Master of Puppets.png'}
+                            src={import.meta.env.BASE_URL + 'Capas/' + getCDName(row.banda + " - " + row.album) + '.png'}
                             width={150}
                             height={150}
                             title={getCDName(row.banda + " - " + row.album)}
@@ -57,7 +57,7 @@ function Row(props) {
         >
             <Box sx={style}>
                 <img
-                    src={'../../../database/cds/Capas/' + getCDName(row.banda + " - " + row.album) + '.png' || '../../../database/cds/Capas/Metallica - Master of Puppets.png'}
+                    src={import.meta.env.BASE_URL + 'Capas/' + getCDName(row.banda + " - " + row.album) + '.png'}
                     width={modalImgSize}
                     height={modalImgSize}
                     title={getCDName(row.banda + " - " + row.album)}

@@ -1,0 +1,25 @@
+const outros = [
+    { "mandante": "Flamengo", "visitante": "Santos", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Série A 2026", "data": "2026-04-05", "estadio": "Maracanã" },
+    { "mandante": "Flamengo", "visitante": "Santos", "golsMandante": 3, "golsVisitante": 2, "campeonato": "Série A 2025", "data": "2025-11-09", "estadio": "Maracanã" },
+    { "mandante": "São Cristóvão", "visitante": "Paduano", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Carioca Série B1 2025", "data": "2025-11-01", "estadio": "Ronaldo Nazário" },
+    { "mandante": "São Cristóvão", "visitante": "Friburguense", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Carioca Série B1 2025", "data": "2025-10-25", "estadio": "Ronaldo Nazário" },
+    { "mandante": "Vasco", "visitante": "Bahia", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Série A 2025", "data": "2025-09-24", "estadio": "São Januário" },
+    { "mandante": "Fluminense", "visitante": "Santos", "golsMandante": 1, "golsVisitante": 0, "campeonato": "Série A 2025", "data": "2025-04-13", "estadio": "Maracanã" },
+    { "mandante": "Fluminense", "visitante": "Flamengo", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Carioca 2025", "data": "2025-02-08", "estadio": "Maracanã" },
+    { "mandante": "Bangu", "visitante": "Boavista", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Carioca 2025", "data": "2025-02-05", "estadio": "Moça Bonita" },
+    { "mandante": "Fluminense", "visitante": "Boavista", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Carioca 2025", "data": "2025-02-02", "estadio": "Maracanã" },
+    { "mandante": "Nacional-URU", "visitante": "Plaza Colonia", "golsMandante": 4, "golsVisitante": 0, "campeonato": "Copa Uruguai 2024", "data": "2024-10-29", "estadio": "Gran Parque Central" },
+    { "mandante": "Fluminense", "visitante": "Internacional", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Série A 2024", "data": "2024-07-04", "estadio": "Maracanã" },
+    { "mandante": "América-RJ", "visitante": "Petrópolis", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Carioca Série A2 2024", "data": "2024-05-18", "estadio": "Giulite Coutinho" },
+    { "mandante": "Brasil", "visitante": "Argentina", "golsMandante": 0, "golsVisitante": 1, "campeonato": "Eliminatórias da Copa do Mundo", "data": "2023-11-21", "estadio": "Maracanã" },
+    { "mandante": "Fluminense", "visitante": "Santos", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Série A 2022", "data": "2022-04-09", "estadio": "Maracanã" },
+    { "mandante": "Brasil", "visitante": "Chile", "golsMandante": 4, "golsVisitante": 0, "campeonato": "Eliminatórias da Copa do Mundo", "data": "2022-03-24", "estadio": "Maracanã" },
+    { "mandante": "Aparecidense", "visitante": "Petrolina", "golsMandante": 3, "golsVisitante": 2, "campeonato": "Copinha 2022", "data": "2022-01-09", "estadio": "Joaquim de Morais Filho" },
+    { "mandante": "Vasco", "visitante": "Santos", "golsMandante": 0, "golsVisitante": 1, "campeonato": "Série A 2019", "data": "2019-10-05", "estadio": "São Januário" },
+    { "mandante": "Flamengo", "visitante": "Santos", "golsMandante": 1, "golsVisitante": 0, "campeonato": "Série A 2019", "data": "2019-09-14", "estadio": "Maracanã" },
+    { "mandante": "Chile", "visitante": "Uruguai", "golsMandante": 0, "golsVisitante": 1, "campeonato": "Copa América 2019", "data": "2019-06-24", "estadio": "Maracanã" },
+    { "mandante": "Vasco", "visitante": "Santos", "golsMandante": 0, "golsVisitante": 3, "campeonato": "Série A 2018", "data": "2018-09-01", "estadio": "Maracanã" },
+    { "mandante": "Brasil", "visitante": "Honduras", "golsMandante": 3, "golsVisitante": 0, "campeonato": "Jogos Pan-Americanos", "data": "2007-07-15", "estadio": "Estádio João Havelange (Engenhão)" },
+];
+
+export default outros;
