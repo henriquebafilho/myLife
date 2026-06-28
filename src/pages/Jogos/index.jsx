@@ -11,25 +11,12 @@ import Adversarios from './pages/Adversarios';
 import Anos from './pages/Anos';
 import Estadios from './pages/Estadios';
 import OutrosJogos from './pages/OutrosJogos';
+import Estatisticas from './components/Estatisticas';
 import Times from './Times';
 import common from './common';
 
 const meuTime = 'Botafogo';
 const jogos = [...common.jogos].sort((a, b) => b.data.localeCompare(a.data));
-
-const jogosComPlacar = jogos.filter(j => j.golsMandante !== '' && j.golsVisitante !== '');
-const vitorias = common.getVitorias(meuTime, jogosComPlacar);
-const empates = common.getEmpates(meuTime, jogosComPlacar);
-const derrotas = common.getDerrotas(meuTime, jogosComPlacar);
-
-const statBoxStyle = {
-    flex: '1 1 120px',
-    backgroundColor: '#161b22',
-    border: '1px solid #30363d',
-    borderRadius: '8px',
-    p: 2,
-    textAlign: 'center',
-};
 
 function JogosList({ onSelectEstadio, onSelectAdversario }) {
     let currentYear = null;
@@ -88,7 +75,7 @@ export default function Jogos() {
         <Box sx={{ mt: '80px', px: { xs: 2, md: 4 }, pb: 6 }}>
 
             {/* Header */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 3 }}>
                 <img
                     src={import.meta.env.BASE_URL + 'escudos/Botafogo.png'}
                     alt="Botafogo"
@@ -98,23 +85,8 @@ export default function Jogos() {
             </Box>
 
             {/* Stats */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
-                <Box sx={statBoxStyle}>
-                    <Typography variant="h4">{jogos.length}</Typography>
-                    <Typography variant="body2" color="text.secondary">jogos</Typography>
-                </Box>
-                <Box sx={{ ...statBoxStyle, borderColor: '#3fb950' }}>
-                    <Typography variant="h4" sx={{ color: '#3fb950' }}>{vitorias}</Typography>
-                    <Typography variant="body2" color="text.secondary">vitórias</Typography>
-                </Box>
-                <Box sx={{ ...statBoxStyle, borderColor: '#e3b341' }}>
-                    <Typography variant="h4" sx={{ color: '#e3b341' }}>{empates}</Typography>
-                    <Typography variant="body2" color="text.secondary">empates</Typography>
-                </Box>
-                <Box sx={{ ...statBoxStyle, borderColor: '#f85149' }}>
-                    <Typography variant="h4" sx={{ color: '#f85149' }}>{derrotas}</Typography>
-                    <Typography variant="body2" color="text.secondary">derrotas</Typography>
-                </Box>
+            <Box sx={{ mb: 4 }}>
+                <Estatisticas meuTime={meuTime} jogos={jogos} />
             </Box>
 
             {/* Tabs */}

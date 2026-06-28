@@ -24,13 +24,14 @@ function CDCard({ cd }) {
 
     return (
         <>
-            <Box sx={{ width: 150, textAlign: 'center' }}>
+            <Box sx={{ textAlign: 'center' }}>
                 <Button
                     onClick={() => setOpenModal(true)}
                     sx={{
                         p: 0,
                         minWidth: 0,
                         display: 'block',
+                        width: '100%',
                         '& img': {
                             transition: 'transform 0.2s ease, filter 0.2s ease',
                             borderRadius: '4px',
@@ -42,7 +43,7 @@ function CDCard({ cd }) {
                         },
                     }}
                 >
-                    <img src={imageSrc} width={150} height={150} title={imageName} alt={imageName} />
+                    <img src={imageSrc} title={imageName} alt={imageName} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover' }} />
                 </Button>
                 <Typography variant="body2" sx={{ mt: 0.75, lineHeight: 1.3, color: 'text.primary' }}>
                     {cd.album}
@@ -116,7 +117,7 @@ export default function CDs() {
                                     {grouped[banda].length} {grouped[banda].length === 1 ? 'CD' : 'CDs'}
                                 </Typography>
                             </Box>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 3 }}>
                                 {grouped[banda].map(cd => (
                                     <CDCard key={cd.banda + cd.album} cd={cd} />
                                 ))}
@@ -159,7 +160,7 @@ export default function CDs() {
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails sx={{ pt: 1, borderTop: '1px solid #30363d' }}>
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 3 }}>
                                     {grouped[banda].map(cd => (
                                         <CDCard key={cd.banda + cd.album} cd={cd} />
                                     ))}
