@@ -97,7 +97,7 @@ export default function Adversarios({ meuTime, selectedAdversario, onSelectEstad
                             sx={{
                                 cursor: 'pointer',
                                 backgroundColor: team.backgroundColor,
-                                border: `1px solid ${team.letterColor}`,
+                                border: '1px solid #fff',
                                 borderRadius: '8px',
                                 overflow: 'hidden',
                                 textAlign: 'center',

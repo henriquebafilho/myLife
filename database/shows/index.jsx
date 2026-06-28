@@ -3,7 +3,7 @@ let shows = [
         evento: "The Police",
         bandas: [
             "The Police",
-            "Paralamas Do Sucesso"
+            "Paralamas do Sucesso"
         ],
         data: "08/12/2007",
         local: "Maracanã",
@@ -40,13 +40,13 @@ let shows = [
         bandas: [
             "Plebe Rude",
             "Biquini Cavadão",
-            "Paralamas Do Sucesso"
+            "Paralamas do Sucesso"
         ],
         data: "13/07/2013",
         local: "Fundição Progresso"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2013",
         bandas: [
             "Metallica",
             "Alice In Chains",
@@ -156,7 +156,7 @@ let shows = [
         local: "Circo Voador"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2015",
         bandas: [
             "Metallica",
             "Motley Crue",
@@ -167,7 +167,7 @@ let shows = [
         local: "Cidade do Rock"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2015",
         bandas: [
             "System Of A Down",
             "Queens Of The Stone Age",
@@ -177,7 +177,7 @@ let shows = [
         local: "Cidade do Rock"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2015",
         bandas: [
             "Slipknot",
             "Faith No More",
@@ -390,7 +390,7 @@ let shows = [
         local: "Imperator"
     },
     {
-        evento: "Maximus Festival",
+        evento: "Maximus Festival 2017",
         bandas: [
             "Linkin Park",
             "Prophets of Rage",
@@ -429,7 +429,7 @@ let shows = [
         local: "Circo Voador"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2017",
         bandas: [
             "Guns N' Roses",
             "The Who",
@@ -439,7 +439,7 @@ let shows = [
         local: "Parque Olímpico"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2017",
         bandas: [
             "Red Hot Chili Peppers",
             "The Offspring",
@@ -599,7 +599,7 @@ let shows = [
         local: "Circo Voador"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2019",
         bandas: [
             "Iron Maiden",
             "Slayer",
@@ -684,7 +684,7 @@ let shows = [
         local: "Sacadura 154"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2022",
         bandas: [
             "Dream Theater",
             "Iron Maiden",
@@ -697,7 +697,7 @@ let shows = [
         local: "Parque Olímpico"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2022",
         bandas: [
             "The Offspring",
             "CPM 22"
@@ -706,7 +706,7 @@ let shows = [
         local: "Parque Olímpico"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2022",
         bandas: [
             "Green Day",
             "Fall Out Boy",
@@ -858,7 +858,7 @@ let shows = [
         local: "Rio Centro"
     },
     {
-        evento: "Lollapalooza",
+        evento: "Lollapalooza 2024",
         bandas: [
             "Blink-182",
             "The Offspring"
@@ -867,7 +867,7 @@ let shows = [
         local: "Autódromo de Interlagos"
     },
     {
-        evento: "Lollapalooza",
+        evento: "Lollapalooza 2024",
         bandas: [
             "Kings of Leon",
             "Limp Bizkit",
@@ -949,7 +949,7 @@ let shows = [
         local: "Farmasi Arena"
     },
     {
-        evento: "Rock in Rio",
+        evento: "Rock in Rio 2024",
         bandas: [
             "Avenged Sevenfold",
             "Deep Purple",
@@ -1101,9 +1101,9 @@ let shows = [
     {
         evento: "We Are One Tour",
         bandas: [
-            "Mute",
+            "Millencollin",
             "Pennywise",
-            "Millencollin"
+            "Mute"
         ],
         data: "29/03/2026",
         local: "Sacadura 154"

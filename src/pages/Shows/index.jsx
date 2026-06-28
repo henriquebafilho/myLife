@@ -57,7 +57,10 @@ sorted.forEach(show => {
     byLocal[key].push(show);
 });
 
-const bandas = Object.keys(byBanda).sort((a, b) => byBanda[b].length - byBanda[a].length);
+const bandas = Object.keys(byBanda).sort((a, b) => {
+    const diff = byBanda[b].length - byBanda[a].length;
+    return diff !== 0 ? diff : a.localeCompare(b, 'pt');
+});
 const locais = Object.keys(byLocal).sort((a, b) => byLocal[b].length - byLocal[a].length);
 const mostSeenBanda = Object.entries(byBanda).sort((a, b) => b[1].length - a[1].length)[0];
 
