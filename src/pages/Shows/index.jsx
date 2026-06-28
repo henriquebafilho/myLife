@@ -1,57 +1,296 @@
-import React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import MuiTabs from '@mui/material/Tabs';
+import MuiTab from '@mui/material/Tab';
+import Chip from '@mui/material/Chip';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 import shows from '../../../database/shows/index';
 
-function Row(props) {
-  const { row } = props;
+function parseDate(dateStr) {
+    return dateStr.split('/').reverse().join('');
+}
 
-  return (
-    <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell align="center">{row.evento}</TableCell>
-        <TableCell>{row.bandas.map(banda => {
-          return <div>{banda}</div>
-        })}</TableCell>
-        <TableCell align="center">{row.data}</TableCell>
-        <TableCell align="center">{row.local}</TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
+function formatDate(dateStr) {
+    const [d, m, y] = dateStr.split('/');
+    return `${d}/${m}/${y}`;
+}
+
+const bandAliases = {
+    'Matanza Ritual': 'Matanza',
+};
+
+const localAliases = {
+    'HSBC Arena': 'Farmasi Arena',
+    'Jeunesse Arena': 'Farmasi Arena',
+    'Teatro Odisseia': 'Agyto',
+};
+
+function normalizeBanda(banda) {
+    return bandAliases[banda] || banda;
+}
+
+function normalizeLocal(local) {
+    return localAliases[local] || local;
+}
+
+const sorted = [...shows].sort((a, b) => parseDate(b.data).localeCompare(parseDate(a.data)));
+
+const byBanda = {};
+sorted.forEach(show => {
+    show.bandas.forEach(banda => {
+        const key = normalizeBanda(banda);
+        if (!byBanda[key]) byBanda[key] = [];
+        byBanda[key].push(show);
+    });
+});
+
+const byLocal = {};
+sorted.forEach(show => {
+    const key = normalizeLocal(show.local);
+    if (!byLocal[key]) byLocal[key] = [];
+    byLocal[key].push(show);
+});
+
+const bandas = Object.keys(byBanda).sort((a, b) => byBanda[b].length - byBanda[a].length);
+const locais = Object.keys(byLocal).sort((a, b) => byLocal[b].length - byLocal[a].length);
+const mostSeenBanda = Object.entries(byBanda).sort((a, b) => b[1].length - a[1].length)[0];
+
+const statBoxStyle = {
+    flex: '1 1 160px',
+    backgroundColor: '#161b22',
+    border: '1px solid #30363d',
+    borderRadius: '8px',
+    p: 2,
+    textAlign: 'center',
+};
+
+function ShowCard({ show }) {
+    return (
+        <Box sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            alignItems: { sm: 'flex-start' },
+            gap: 2,
+            py: 2,
+            borderBottom: '1px solid #30363d',
+            '&:last-child': { borderBottom: 'none' },
+        }}>
+            <Typography variant="caption" color="text.secondary" sx={{ minWidth: 90, pt: 0.3 }}>
+                {formatDate(show.data)}
+            </Typography>
+            <Box sx={{ flex: 1 }}>
+                <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    {show.evento}
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 0.5 }}>
+                    {show.bandas.map(banda => (
+                        <Chip key={banda} label={banda} size="small" sx={{
+                            backgroundColor: 'rgba(88,166,255,0.1)',
+                            color: '#58a6ff',
+                            border: '1px solid rgba(88,166,255,0.2)',
+                            fontSize: '0.7rem',
+                            height: 22,
+                        }} />
+                    ))}
+                </Box>
+                <Typography variant="caption" color="text.secondary">{show.local}</Typography>
+            </Box>
+        </Box>
+    );
+}
+
+function Section({ title, count, children }) {
+    return (
+        <Box sx={{ mb: 5 }}>
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: 2,
+                mb: 1.5,
+                pb: 1,
+                borderBottom: '1px solid #30363d',
+            }}>
+                <Typography variant="h5">{title}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {count} {count === 1 ? 'show' : 'shows'}
+                </Typography>
+            </Box>
+            {children}
+        </Box>
+    );
 }
 
 export default function Shows() {
-  const sortedShows = shows.sort((a, b) => {
-    const dataA = a.data.split('/').reverse().join('');
-    const dataB = b.data.split('/').reverse().join('');
+    const [tab, setTab] = useState(0);
+    const [bandaSearch, setBandaSearch] = useState('');
+    const [localSearch, setLocalSearch] = useState('');
 
-    return dataB.localeCompare(dataA);
-  });
+    const normalize = str => str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
-  return (<>
-    <div style={{ margin: '100px 0 50px 0' }}>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Evento</TableCell>
-              <TableCell>Bandas</TableCell>
-              <TableCell align="center">Data</TableCell>
-              <TableCell align="center">Local</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedShows.map((show) => (
-              <Row key={show.evento + show.data} row={show} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
-  </>);
+    const filteredBandas = bandas.filter(b => normalize(b).includes(normalize(bandaSearch)));
+    const filteredLocais = locais.filter(l => normalize(l).includes(normalize(localSearch)));
+
+    return (
+        <Box sx={{ mt: '80px', px: { xs: 2, md: 4 }, pb: 6 }}>
+
+            {/* Stats */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
+                <Box sx={statBoxStyle}>
+                    <Typography variant="h4">{shows.length}</Typography>
+                    <Typography variant="body2" color="text.secondary">shows</Typography>
+                </Box>
+                <Box sx={statBoxStyle}>
+                    <Typography variant="h4">{bandas.length}</Typography>
+                    <Typography variant="body2" color="text.secondary">bandas diferentes</Typography>
+                </Box>
+                <Box sx={statBoxStyle}>
+                    <Typography variant="h5" sx={{ mb: 0.25 }}>{mostSeenBanda[0]}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        banda mais vista · {mostSeenBanda[1].length}x
+                    </Typography>
+                </Box>
+                <Box sx={statBoxStyle}>
+                    <Typography variant="h5" sx={{ mb: 0.25 }}>{locais[0]}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        local mais visitado · {byLocal[locais[0]].length} shows
+                    </Typography>
+                </Box>
+            </Box>
+
+            {/* Tabs */}
+            <MuiTabs
+                value={tab}
+                onChange={(_, v) => setTab(v)}
+                sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
+            >
+                <MuiTab label="Eventos" />
+                <MuiTab label="Por Banda" />
+                <MuiTab label="Por Local" />
+            </MuiTabs>
+
+            {/* Eventos */}
+            {tab === 0 && (
+                <Box>
+                    {(() => {
+                        let currentYear = null;
+                        return sorted.map(show => {
+                            const year = show.data.split('/')[2];
+                            const showDivider = year !== currentYear;
+                            currentYear = year;
+                            return (
+                                <React.Fragment key={show.evento + show.data}>
+                                    {showDivider && (
+                                        <Box sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 2,
+                                            my: 3,
+                                        }}>
+                                            <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                                            <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: 1 }}>
+                                                {year}
+                                            </Typography>
+                                            <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                                        </Box>
+                                    )}
+                                    <ShowCard show={show} />
+                                </React.Fragment>
+                            );
+                        });
+                    })()}
+                </Box>
+            )}
+
+            {/* Por Banda */}
+            {tab === 1 && (
+                <Box>
+                    <Box sx={{
+                        display: 'flex', alignItems: 'center', gap: 1,
+                        mb: 3, px: 2, py: 1,
+                        backgroundColor: '#161b22',
+                        border: '1px solid #30363d',
+                        borderRadius: '8px',
+                    }}>
+                        <SearchIcon sx={{ color: '#8b949e', fontSize: 20 }} />
+                        <InputBase
+                            placeholder="Buscar banda..."
+                            value={bandaSearch}
+                            onChange={e => setBandaSearch(e.target.value)}
+                            sx={{ flex: 1, color: 'text.primary', fontSize: '0.95rem' }}
+                        />
+                    </Box>
+                    {filteredBandas.map(banda => (
+                        <Accordion key={banda} disableGutters sx={{
+                            backgroundColor: '#161b22',
+                            border: '1px solid #30363d',
+                            borderRadius: '8px !important',
+                            mb: 1.5,
+                            '&:before': { display: 'none' },
+                        }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#8b949e' }} />}>
+                                <Typography variant="h6" sx={{ mr: 1.5 }}>{banda}</Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ alignSelf: 'center' }}>
+                                    {byBanda[banda].length} {byBanda[banda].length === 1 ? 'show' : 'shows'}
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ pt: 0, borderTop: '1px solid #30363d' }}>
+                                {byBanda[banda].map(show => (
+                                    <ShowCard key={show.evento + show.data} show={show} />
+                                ))}
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                </Box>
+            )}
+
+            {/* Por Local */}
+            {tab === 2 && (
+                <Box>
+                    <Box sx={{
+                        display: 'flex', alignItems: 'center', gap: 1,
+                        mb: 3, px: 2, py: 1,
+                        backgroundColor: '#161b22',
+                        border: '1px solid #30363d',
+                        borderRadius: '8px',
+                    }}>
+                        <SearchIcon sx={{ color: '#8b949e', fontSize: 20 }} />
+                        <InputBase
+                            placeholder="Buscar local..."
+                            value={localSearch}
+                            onChange={e => setLocalSearch(e.target.value)}
+                            sx={{ flex: 1, color: 'text.primary', fontSize: '0.95rem' }}
+                        />
+                    </Box>
+                    {filteredLocais.map(local => (
+                        <Accordion key={local} disableGutters sx={{
+                            backgroundColor: '#161b22',
+                            border: '1px solid #30363d',
+                            borderRadius: '8px !important',
+                            mb: 1.5,
+                            '&:before': { display: 'none' },
+                        }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#8b949e' }} />}>
+                                <Typography variant="h6" sx={{ mr: 1.5 }}>{local}</Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ alignSelf: 'center' }}>
+                                    {byLocal[local].length} {byLocal[local].length === 1 ? 'show' : 'shows'}
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ pt: 0, borderTop: '1px solid #30363d' }}>
+                                {byLocal[local].map(show => (
+                                    <ShowCard key={show.evento + show.data} show={show} />
+                                ))}
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                </Box>
+            )}
+
+        </Box>
+    );
 }

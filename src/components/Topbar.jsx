@@ -1,165 +1,135 @@
 import { useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar from '@mui/material/AppBar';
+import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import PersonIcon from '@mui/icons-material/Person';
+import Tooltip from '@mui/material/Tooltip';
+import Paper from '@mui/material/Paper';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import HomeIcon from '@mui/icons-material/Home';
 import StadiumIcon from '@mui/icons-material/Stadium';
 import MusicNote from '@mui/icons-material/MusicNote';
 import Album from '@mui/icons-material/Album';
 import CDs from '../pages/CDs/index';
 import Jogos from '../pages/Jogos/index';
 import Shows from '../pages/Shows/index';
+import Home from '../pages/Home/index';
 
-const drawerWidth = 240;
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme }) => ({
-    transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    variants: [
-        {
-            props: ({ open }) => open,
-            style: {
-                width: `calc(100% - ${drawerWidth}px)`,
-                marginLeft: `${drawerWidth}px`,
-                transition: theme.transitions.create(['margin', 'width'], {
-                    easing: theme.transitions.easing.easeOut,
-                    duration: theme.transitions.duration.enteringScreen,
-                }),
-            },
-        },
-    ],
-}));
+const RAIL_WIDTH = 65;
 
 const screenMap = {
-    cds: CDs,
+    home: Home,
     jogos: Jogos,
-    shows: Shows
+    shows: Shows,
+    cds: CDs,
 };
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-}));
+const navItems = [
+    { title: 'Início', key: 'home', icon: <HomeIcon /> },
+    { title: 'Jogos do Botafogo', key: 'jogos', icon: <StadiumIcon /> },
+    { title: 'Shows', key: 'shows', icon: <MusicNote /> },
+    { title: 'CDs', key: 'cds', icon: <Album /> },
+];
 
-export default function PersistentDrawerLeft() {
-    const theme = useTheme();
-    const [open, setOpen] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState('cds');
-    const profileOptions = [/* { title: 'Perfil', key: 'perfil', icon: <PersonIcon /> } */];
-    const aboutMe = [
-        { title: 'Jogos do Botafogo', key: 'jogos', icon: <StadiumIcon /> },
-        { title: 'Shows', key: 'shows', icon: <MusicNote /> },
-        { title: 'CDs', key: 'cds', icon: <Album /> }
-    ];
-
-    const handleItemClick = (screenKey) => {
-        setCurrentScreen(screenKey);
-    };
-
+export default function Topbar() {
+    const [currentScreen, setCurrentScreen] = useState('home');
     const CurrentContent = screenMap[currentScreen];
 
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
-    return (<>
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-            <AppBar position="fixed" open={open}>
+    return (
+        <>
+            {/* AppBar */}
+            <AppBar position="fixed" sx={{ zIndex: 1300 }}>
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={[
-                            {
-                                mr: 2,
-                            },
-                            open && { display: 'none' },
-                        ]}
+                    <Typography
+                        variant="h6" noWrap component="div"
+                        onClick={() => setCurrentScreen('home')}
+                        sx={{ cursor: 'pointer', '&:hover': { color: '#58a6ff' }, transition: 'color 0.2s ease' }}
                     >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" noWrap component="div">
                         Henrique Filho
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: drawerWidth,
-                        boxSizing: 'border-box'
-                    }
-                }}
-                variant="persistent"
-                anchor="left"
-                open={open}
-            >
-                <DrawerHeader>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                </DrawerHeader>
-                <Divider />
-                <List>
-                    {profileOptions.map((option) => (
-                        <ListItem key={option.key} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {option.icon}
-                                </ListItemIcon>
-                                <ListItemText primary={option.title} />
-                            </ListItemButton>
-                        </ListItem>
+
+            {/* Rail sidebar — desktop only */}
+            <Box sx={{
+                width: RAIL_WIDTH,
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                height: '100vh',
+                backgroundColor: '#161b22',
+                borderRight: '1px solid #30363d',
+                display: { xs: 'none', md: 'flex' },
+                flexDirection: 'column',
+                alignItems: 'center',
+                pt: '72px',
+                pb: 2,
+                gap: 1,
+                zIndex: 1200,
+            }}>
+                {navItems.map(item => (
+                    <Tooltip title={item.title} placement="right" key={item.key}>
+                        <IconButton
+                            onClick={() => setCurrentScreen(item.key)}
+                            sx={{
+                                width: 44,
+                                height: 44,
+                                borderRadius: '10px',
+                                color: currentScreen === item.key ? '#58a6ff' : '#8b949e',
+                                backgroundColor: currentScreen === item.key ? 'rgba(88,166,255,0.12)' : 'transparent',
+                                transition: 'color 0.15s ease, background-color 0.15s ease',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(88,166,255,0.08)',
+                                    color: '#e6edf3',
+                                },
+                            }}
+                        >
+                            {item.icon}
+                        </IconButton>
+                    </Tooltip>
+                ))}
+            </Box>
+
+            {/* Content */}
+            <Box sx={{
+                ml: { xs: 0, md: `${RAIL_WIDTH}px` },
+                mb: { xs: '56px', md: 0 },
+            }}>
+                <div key={currentScreen} className="page-transition">
+                    <CurrentContent onNavigate={setCurrentScreen} />
+                </div>
+            </Box>
+
+            {/* Bottom navigation — mobile only */}
+            <Paper sx={{
+                position: 'fixed',
+                bottom: 0, left: 0, right: 0,
+                display: { xs: 'block', md: 'none' },
+                zIndex: 1300,
+                borderTop: '1px solid #30363d',
+                borderRadius: 0,
+            }}>
+                <BottomNavigation
+                    value={currentScreen}
+                    onChange={(_, value) => setCurrentScreen(value)}
+                    sx={{ backgroundColor: '#161b22' }}
+                >
+                    {navItems.map(item => (
+                        <BottomNavigationAction
+                            key={item.key}
+                            value={item.key}
+                            icon={item.icon}
+                            sx={{
+                                color: '#8b949e',
+                                '&.Mui-selected': { color: '#58a6ff' },
+                                minWidth: 0,
+                            }}
+                        />
                     ))}
-                </List>
-                <Divider />
-                <List>
-                    {aboutMe.map((option) => (
-                        <ListItem key={option.key} disablePadding>
-                            <ListItemButton
-                                onClick={() => handleItemClick(option.key)}
-                                selected={currentScreen === option.key}
-                            >
-                                <ListItemIcon>
-                                    {option.icon}
-                                </ListItemIcon>
-                                <ListItemText primary={option.title} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            </Drawer>
-        </Box>
-        <CurrentContent />
-    </>);
+                </BottomNavigation>
+            </Paper>
+        </>
+    );
 }

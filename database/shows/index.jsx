@@ -174,7 +174,7 @@ let shows = [
             "Hollywood Vampires"
         ],
         data: "24/09/2015",
-        local: "Cidade do Rcok"
+        local: "Cidade do Rock"
     },
     {
         evento: "Rock in Rio",
@@ -186,7 +186,7 @@ let shows = [
             "Nightwish"
         ],
         data: "25/09/2015",
-        local: "Rock In Rio"
+        local: "Cidade do Rock"
     },
     {
         evento: "Turnê Pior Cenário Possível",
@@ -611,7 +611,7 @@ let shows = [
             "Claustrofobia"
         ],
         data: "04/10/2019",
-        local: "Rock in Rio"
+        local: "Parque Olímpico"
     },
     {
         evento: "Raimundos 25 Anos",
@@ -694,7 +694,7 @@ let shows = [
             "Sepultura"
         ],
         data: "02/09/2022",
-        local: "Rock in Rio"
+        local: "Parque Olímpico"
     },
     {
         evento: "Rock in Rio",
@@ -703,7 +703,7 @@ let shows = [
             "CPM 22"
         ],
         data: "08/09/2022",
-        local: "Rock in Rio"
+        local: "Parque Olímpico"
     },
     {
         evento: "Rock in Rio",
@@ -715,7 +715,7 @@ let shows = [
         ],
         data: "09/09/2022",
         "Ano": "2022",
-        local: "Rock in Rio",
+        local: "Parque Olímpico",
 
     },
     {
@@ -1091,6 +1091,40 @@ let shows = [
         ],
         data: "20/12/2025",
         local: "Allianz Parque"
+    },
+    {
+        evento: "20 Years Tour: Gates of Metal Fried Chicken of Death",
+        bandas: ["Massacration"],
+        data: "02/05/2026",
+        local: "Circo Voador"
+    },
+    {
+        evento: "We Are One Tour",
+        bandas: [
+            "Mute",
+            "Pennywise",
+            "Millencollin"
+        ],
+        data: "29/03/2026",
+        local: "Sacadura 154"
+    },
+    {
+        evento: "D.R.I e Ratos de Porão",
+        bandas: [
+            "Ratos de Porão",
+            "D.R.I"
+        ],
+        data: "20/03/2026",
+        local: "Circo Voador"
+    },
+    {
+        evento: "Cause of Death 35 Years",
+        bandas: [
+            "Podridão",
+            "Obituary"
+        ],
+        data: "24/02/2026",
+        local: "Agyto"
     },
     {
         evento: "Afasia 20 Anos",

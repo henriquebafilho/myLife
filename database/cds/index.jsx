@@ -46,6 +46,11 @@ let cds = [
     },
     {
         banda: "AC/DC",
+        ano: 1988,
+        album: "Blow Up Your Video"
+    },
+    {
+        banda: "AC/DC",
         ano: 1990,
         album: "The Razors Edge"
     },
@@ -213,6 +218,11 @@ let cds = [
         banda: "Blink-182",
         ano: 2003,
         album: "Blink-182"
+    },
+    {
+        banda: "Blink-182",
+        ano: 2005,
+        album: "Greatest Hits"
     },
     {
         banda: "Blink-182",
@@ -552,7 +562,7 @@ let cds = [
     {
         banda: "Iron Maiden",
         ano: 2005,
-        album: "Rock am Ring"
+        album: "Rock Am Ring 2005"
     },
     {
         banda: "Iron Maiden",
@@ -597,12 +607,12 @@ let cds = [
     {
         banda: "Iron Maiden",
         ano: 2017,
-        album: "The Book of Souls: Live Chapter"
+        album: "The Book of Souls - Live Chapter"
     },
     {
         banda: "Iron Maiden",
         ano: 2020,
-        album: "Nights of the Dead, Legacy of the Beast: Live in Mexico City"
+        album: "Nights of the Dead, Legacy of the Beast - Live in Mexico City"
     },
     {
         banda: "Iron Maiden",
