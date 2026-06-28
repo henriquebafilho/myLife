@@ -13,6 +13,7 @@ import StadiumIcon from '@mui/icons-material/Stadium';
 import MusicNote from '@mui/icons-material/MusicNote';
 import Album from '@mui/icons-material/Album';
 import CDs from '../pages/CDs/index';
+import VoltarAoTopo from './VoltarAoTopo';
 import Jogos from '../pages/Jogos/index';
 import Shows from '../pages/Shows/index';
 import Home from '../pages/Home/index';
@@ -28,7 +29,7 @@ const screenMap = {
 
 const navItems = [
     { title: 'Início', key: 'home', icon: <HomeIcon /> },
-    { title: 'Jogos do Botafogo', key: 'jogos', icon: <StadiumIcon /> },
+    { title: 'Jogos', key: 'jogos', icon: <StadiumIcon /> },
     { title: 'Shows', key: 'shows', icon: <MusicNote /> },
     { title: 'CDs', key: 'cds', icon: <Album /> },
 ];
@@ -101,6 +102,8 @@ export default function Topbar() {
                     <CurrentContent onNavigate={setCurrentScreen} />
                 </div>
             </Box>
+
+            <VoltarAoTopo />
 
             {/* Bottom navigation — mobile only */}
             <Paper sx={{

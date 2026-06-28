@@ -1,129 +1,115 @@
-import React, { Component } from 'react';
-import Times from '../Times';
+import { useState, useEffect, useMemo } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 import common from '../common';
 import ViewEstadio from './viewScreens/ViewEstadio';
 
-class Estadios extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meuTime: props.meuTime,
-      jogos: [],
-      estadios: [],
-      filtered: [],
-      isLoading: false,
-      clicked: false,
-      estadioAtual: '',
-      jogosEstadio: [],
-      searchTerm: ''
+const normalize = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
+
+const jogos = common.jogos;
+
+const todosEstadios = (() => {
+    const set = new Set();
+    for (const j of jogos) {
+        if (j.estadio && j.estadio[0] !== '(') set.add(j.estadio);
     }
-    this.buttonClick = this.buttonClick.bind(this);
-  }
-
-  async componentDidMount() {
-    const jogos = await this.getJogos();
-    await this.getEstadios(jogos);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.selectedEstadio && this.props.selectedEstadio !== prevProps.selectedEstadio) {
-      this.openSelectedEstadio();
-    }
-  }
-
-  openSelectedEstadio = () => {
-    if (this.props.selectedEstadio && this.state.estadios.includes(this.props.selectedEstadio)) {
-      if (!this.state.clicked || this.state.estadioAtual !== this.props.selectedEstadio) {
-        this.buttonClick(this.props.selectedEstadio);
-      }
-    }
-  }
-
-  getJogos = async () => {
-    this.setState({ isLoading: true });
-    const jogos = common.jogos;
-    this.setState({ jogos, isLoading: false });
-    return jogos;
-  }
-
-  getEstadios = async (jogos = this.state.jogos) => {
-    const estadios = [];
-    this.setState({ isLoading: true });
-    for (let i in jogos) {
-      if (!estadios.includes(jogos[i].estadio) && jogos[i].estadio !== "" && jogos[i].estadio[0] !== "(") {
-        estadios.push(jogos[i].estadio);
-      }
-    }
-    estadios.sort((a, b) => {
-      const qtdJogosA = common.getTotalEstadio(a, jogos);
-      const qtdJogosB = common.getTotalEstadio(b, jogos);
-      if (qtdJogosB !== qtdJogosA) return qtdJogosB - qtdJogosA;
-      return a < b ? -1 : a > b ? 1 : 0;
+    const arr = Array.from(set);
+    arr.sort((a, b) => {
+        const diff = common.getTotalEstadio(b, jogos) - common.getTotalEstadio(a, jogos);
+        return diff !== 0 ? diff : a.localeCompare(b);
     });
-    this.setState({ estadios, filtered: estadios, isLoading: false }, () => this.openSelectedEstadio());
-  }
+    return arr;
+})();
 
-  buttonClick = (estadio) => {
-    const jogosEstadio = this.state.jogos.filter(jogo => jogo.estadio === estadio);
-    this.setState({ clicked: true, estadioAtual: estadio, jogosEstadio });
-  }
+export default function Estadios({ meuTime, selectedEstadio, onSelectAdversario }) {
+    const [search, setSearch] = useState('');
+    const [estadioAtual, setEstadioAtual] = useState(null);
 
-  searchStadium = async (e) => {
-    const jogos = this.state.jogos;
-    const searchTerm = e.target.value;
-    const normalizedSearchTerm = searchTerm.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().trim();
-    const filtered = this.state.estadios.filter(estadio => {
-      const normalizedEstadio = estadio.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().trim();
-      return normalizedEstadio.includes(normalizedSearchTerm);
-    });
-    filtered.sort((a, b) => {
-      const qtdJogosA = common.getTotalEstadio(a, jogos);
-      const qtdJogosB = common.getTotalEstadio(b, jogos);
-      if (qtdJogosB !== qtdJogosA) return qtdJogosB - qtdJogosA;
-      return a < b ? -1 : a > b ? 1 : 0;
-    });
-    this.setState({ filtered, searchTerm });
-  }
+    useEffect(() => {
+        if (selectedEstadio && todosEstadios.includes(selectedEstadio)) {
+            setEstadioAtual(selectedEstadio);
+        }
+    }, [selectedEstadio]);
 
-  render() {
-    const meuTime = this.state.meuTime;
-    const meusJogos = this.state.jogos;
-    const buttonClickFunction = (estadio) => this.buttonClick(estadio);
+    const filtered = useMemo(() => {
+        if (!search.trim()) return todosEstadios;
+        const term = normalize(search);
+        return todosEstadios.filter(e => normalize(e).includes(term));
+    }, [search]);
+
+    if (estadioAtual) {
+        const jogosEstadio = jogos.filter(j => j.estadio === estadioAtual);
+        return (
+            <ViewEstadio
+                meuTime={meuTime}
+                jogosEstadio={jogosEstadio}
+                estadio={estadioAtual}
+                onBack={() => setEstadioAtual(null)}
+                onSelectAdversario={onSelectAdversario}
+            />
+        );
+    }
 
     return (
-      <>
-        {this.state.clicked ? <ViewEstadio meuTime={this.props.meuTime} meusJogos={meusJogos} jogosEstadio={this.state.jogosEstadio} estadio={this.state.estadioAtual} onBack={() => this.setState({ clicked: false })} onSelectAdversario={this.props.onSelectAdversario} /> :
-          <div className="App-header" style={{ backgroundColor: Times(this.props.meuTime).backgroundColor, color: Times(this.props.meuTime).letterColor, alignItems: 'normal' }}>
-            <h4 style={{ textAlign: 'center' }}>{this.state.estadios.length + " estádio"}{this.state.estadios.length > 1 ? "s" : ""}{" cadastrados"}</h4>
-            <br />
-            <table>
-              <tbody>
-                {this.state.isLoading && <h1>Carregando...</h1>}
-                <input
-                  type="text"
-                  placeholder="Insira o nome do estádio"
-                  value={this.state.searchTerm}
-                  onChange={this.searchStadium}
-                  style={{ width: '100%', marginBottom: '20px', height: '40px', padding: '5px' }}
+        <Box>
+            <Box sx={{
+                display: 'flex', alignItems: 'center', gap: 1,
+                mb: 3, px: 2, py: 1,
+                backgroundColor: '#161b22',
+                border: '1px solid #30363d',
+                borderRadius: '8px',
+            }}>
+                <SearchIcon sx={{ color: '#8b949e', fontSize: 20 }} />
+                <InputBase
+                    placeholder="Buscar estádio..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    sx={{ flex: 1, color: 'text.primary', fontSize: '0.95rem' }}
                 />
-                {this.state.filtered.length > 0 ?
-                  !this.state.isLoading && this.state.filtered.map(function (i) {
-                    let totalEstadio = common.getTotalEstadio(i, meusJogos);
-                    const imagemEstadio = import.meta.env.BASE_URL + 'estadios/' + i + '.png';
-                    return <div key={i}>
-                      <button id='selectEstadio' onClick={() => buttonClickFunction(i)} style={{ borderColor: Times(meuTime).letterColor, borderStyle: 'solid', backgroundColor: Times(meuTime).backgroundColor, color: Times(meuTime).letterColor }}>
-                        <img src={imagemEstadio} style={{ verticalAlign: 'middle' }} alt='estádio' height='150' width='150' loading='lazy' onError={(e) => { e.target.style.display = 'none' }} />
-                        <div id='tituloOpcao' style={{ padding: '10px' }}>{i}</div>
-                        <div style={{ paddingBottom: '5px', fontSize: '15px', fontWeight: '100' }}>{totalEstadio} {totalEstadio > 1 ? "jogos" : "jogo"}</div>
-                      </button>
-                    </div>
-                  }) : <div><h4 style={{ color: Times(this.state.meuTime).letterColor, textAlign: 'center', paddingBottom: '50px' }}>Nenhum estádio encontrado</h4></div>}
-              </tbody>
-            </table>
-          </div>}
-      </>
-    )
-  }
-}
+            </Box>
 
-export default Estadios;
+            {filtered.length === 0 && (
+                <Typography color="text.secondary" textAlign="center">Nenhum estádio encontrado</Typography>
+            )}
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 2 }}>
+                {filtered.map(estadio => {
+                    const total = common.getTotalEstadio(estadio, jogos);
+                    const imagemEstadio = import.meta.env.BASE_URL + 'estadios/' + estadio + '.png';
+                    return (
+                        <Box
+                            key={estadio}
+                            onClick={() => setEstadioAtual(estadio)}
+                            sx={{
+                                cursor: 'pointer',
+                                backgroundColor: '#161b22',
+                                border: '1px solid #484f58',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                textAlign: 'center',
+                                transition: 'border-color 0.15s, transform 0.15s',
+                                '&:hover': { borderColor: '#8b949e', transform: 'translateY(-2px)' },
+                            }}
+                        >
+                            <img
+                                src={imagemEstadio}
+                                alt={estadio}
+                                loading="lazy"
+                                style={{ display: 'block', width: '100%', aspectRatio: '1', objectFit: 'cover' }}
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                            />
+                            <Box sx={{ p: 1.5 }}>
+                                <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.3 }}>{estadio}</Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    {total} {total === 1 ? 'jogo' : 'jogos'}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    );
+                })}
+            </Box>
+        </Box>
+    );
+}

@@ -1,51 +1,31 @@
-import Times from '../Times';
-import Common from '../common';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import common from '../common';
 
-function Estatisticas(props) {
-    var total = props.jogos.length;
-    var vitorias = Common.getVitorias(props.meuTime, props.jogos);
-    var empates = Common.getEmpates(props.meuTime, props.jogos);
-    var derrotas = Common.getDerrotas(props.meuTime, props.jogos);
+export default function Estatisticas({ meuTime, jogos }) {
+    const total = jogos.length;
+    const v = common.getVitorias(meuTime, jogos);
+    const e = common.getEmpates(meuTime, jogos);
+    const d = common.getDerrotas(meuTime, jogos);
+
     return (
-        <div style={{ paddingBottom: '30px', width: '100%', fontSize: '25px' }}>
-            <p style={{ color: Times(props.meuTime).letterColor }}>{total} jogo{total > 1 ? 's' : ''}</p>
-            <div className='resultsBar' style={{ borderColor: Times(props.meuTime).backgroundColor === 'white' ? 'black' : 'white' }}>
-                <div className="vitoriasBar" title={vitorias + ' Vitórias'}
-                    style={{
-                        width: vitorias * 100 / total + '%',
-                        borderTopLeftRadius: vitorias > 0 ? '10px' : '',
-                        borderBottomLeftRadius: vitorias > 0 ? '10px' : '',
-                        borderTopRightRadius: (vitorias > 0 && empates === 0 && derrotas === 0) ? '10px' : '',
-                        borderBottomRightRadius: (vitorias > 0 && empates === 0 && derrotas === 0) ? '10px' : '',
-                        textShadow: Common.textShadow
-                    }}>
-                    {vitorias > 0 ? vitorias : ""}
-                </div>
-                <div className="empatesBar" title={empates + ' Empates'}
-                    style={{
-                        width: empates * 100 / total + '%',
-                        borderTopLeftRadius: (vitorias === 0 && empates > 0) ? '10px' : '',
-                        borderBottomLeftRadius: (vitorias === 0 && empates > 0) ? '10px' : '',
-                        borderTopRightRadius: (empates > 0 && derrotas === 0) ? '10px' : '',
-                        borderBottomRightRadius: (empates > 0 && derrotas === 0) ? '10px' : '',
-                        textShadow: Common.textShadow
-                    }}>
-                    {empates > 0 ? empates : ""}
-                </div>
-                <div className="derrotasBar" title={derrotas + ' Derrotas'}
-                    style={{
-                        width: derrotas * 100 / total + '%',
-                        borderTopLeftRadius: (vitorias === 0 && empates === 0 && derrotas > 0) ? '10px' : '',
-                        borderBottomLeftRadius: (vitorias === 0 && empates === 0 && derrotas > 0) ? '10px' : '',
-                        borderTopRightRadius: derrotas > 0 ? '10px' : '',
-                        borderBottomRightRadius: derrotas > 0 ? '10px' : '',
-                        textShadow: Common.textShadow
-                    }}>
-                    {derrotas > 0 ? derrotas : ""}
-                </div>
-            </div>
-        </div>
-    )
+        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}><Box sx={{ display: 'inline-flex', flexDirection: 'column', minWidth: 200, maxWidth: '100%' }}>
+            <Box sx={{ display: 'flex', gap: 2.5, mb: 1, flexWrap: 'wrap' }}>
+                <Typography variant="body2" sx={{ color: '#3fb950' }}>{v} vitória{v !== 1 ? 's' : ''}</Typography>
+                <Typography variant="body2" sx={{ color: '#e3b341' }}>{e} empate{e !== 1 ? 's' : ''}</Typography>
+                <Typography variant="body2" sx={{ color: '#f85149' }}>{d} derrota{d !== 1 ? 's' : ''}</Typography>
+            </Box>
+            {total > 0 && (
+                <Box sx={{ display: 'flex', height: 8, borderRadius: '4px', overflow: 'hidden', backgroundColor: '#21262d' }}>
+                    {v > 0 && <Tooltip title={`${v} vitórias`}><Box sx={{ width: `${v * 100 / total}%`, backgroundColor: '#3fb950' }} /></Tooltip>}
+                    {e > 0 && <Tooltip title={`${e} empates`}><Box sx={{ width: `${e * 100 / total}%`, backgroundColor: '#e3b341' }} /></Tooltip>}
+                    {d > 0 && <Tooltip title={`${d} derrotas`}><Box sx={{ width: `${d * 100 / total}%`, backgroundColor: '#f85149' }} /></Tooltip>}
+                </Box>
+            )}
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block', textAlign: 'center' }}>
+                {total} jogo{total !== 1 ? 's' : ''}
+            </Typography>
+        </Box></Box>
+    );
 }
-
-export default Estatisticas;

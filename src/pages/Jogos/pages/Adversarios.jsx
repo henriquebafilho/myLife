@@ -1,158 +1,136 @@
-import React, { Component } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 import Times from '../Times';
 import common from '../common';
 import ViewAdversario from './viewScreens/ViewAdversario';
 
-class Adversarios extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meuTime: props.meuTime,
-      jogos: [],
-      adversarios: [],
-      filtered: [],
-      isLoading: false,
-      clicked: false,
-      adversarioAtual: '',
-      jogosAdversario: [],
-      searchTerm: ''
+const normalize = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
+
+const jogos = common.jogos;
+const nomesNosJogos = new Set(jogos.flatMap(j => [j.mandante, j.visitante]));
+
+const buildAdversarios = (meuTime) => {
+    const set = new Set();
+    for (const j of jogos) {
+        const m = Times(j.mandante).nomeAtual;
+        const v = Times(j.visitante).nomeAtual;
+        if (m !== meuTime) set.add(m);
+        if (v !== meuTime) set.add(v);
     }
-    this.buttonClick = this.buttonClick.bind(this);
-  }
-
-  async componentDidMount() {
-    await this.getJogos();
-    await this.getAdversarios();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.selectedAdversario && this.props.selectedAdversario !== prevProps.selectedAdversario) {
-      this.openSelectedAdversario();
-    }
-  }
-
-  openSelectedAdversario = () => {
-    const selected = this.props.selectedAdversario ? Times(this.props.selectedAdversario).nomeAtual : '';
-    if (selected && this.state.adversarios.includes(selected)) {
-      if (!this.state.clicked || this.state.adversarioAtual !== selected) {
-        this.buttonClick(selected);
-      }
-    }
-  }
-
-  getJogos = () => {
-    return new Promise(resolve => {
-      this.setState({ isLoading: true, jogos: common.jogos }, () => {
-        this.setState({ isLoading: false }, resolve);
-      });
+    const arr = Array.from(set);
+    arr.sort((a, b) => {
+        const diff = common.getTotalAdversario(meuTime, b) - common.getTotalAdversario(meuTime, a);
+        return diff !== 0 ? diff : a.localeCompare(b);
     });
-  }
+    return arr;
+};
 
-  getAdversarios = async () => {
-    const jogos = this.state.jogos.length > 0 ? this.state.jogos : common.jogos;
-    const adversariosSet = new Set();
-    const meuTime = this.props.meuTime;
+export default function Adversarios({ meuTime, selectedAdversario, onSelectEstadio }) {
+    const [search, setSearch] = useState('');
+    const [adversarioAtual, setAdversarioAtual] = useState(null);
 
-    this.setState({ isLoading: true });
+    const todosAdversarios = useMemo(() => buildAdversarios(meuTime), [meuTime]);
 
-    for (const jogo of jogos) {
-      const mandanteNome = Times(jogo.mandante).nomeAtual;
-      const visitanteNome = Times(jogo.visitante).nomeAtual;
+    useEffect(() => {
+        if (selectedAdversario) {
+            const nomeAtual = Times(selectedAdversario).nomeAtual;
+            if (todosAdversarios.includes(nomeAtual)) {
+                setAdversarioAtual(nomeAtual);
+            }
+        }
+    }, [selectedAdversario, todosAdversarios]);
 
-      if (mandanteNome !== meuTime) adversariosSet.add(mandanteNome);
-      if (visitanteNome !== meuTime) adversariosSet.add(visitanteNome);
+    const filtered = useMemo(() => {
+        if (!search.trim()) return todosAdversarios;
+        const term = normalize(search);
+        return todosAdversarios.filter(name => {
+            const team = Times(name);
+            return [team.nomeAtual, ...team.nomesAnteriores].some(n => normalize(n).includes(term));
+        });
+    }, [search, todosAdversarios]);
+
+    if (adversarioAtual) {
+        return (
+            <ViewAdversario
+                meuTime={meuTime}
+                adversario={adversarioAtual}
+                onBack={() => setAdversarioAtual(null)}
+                onSelectEstadio={onSelectEstadio}
+            />
+        );
     }
 
-    const adversarios = Array.from(adversariosSet);
-    adversarios.sort((a, b) => {
-      const qtdJogosA = common.getTotalAdversario(meuTime, a);
-      const qtdJogosB = common.getTotalAdversario(meuTime, b);
-      if (qtdJogosB !== qtdJogosA) return qtdJogosB - qtdJogosA;
-      return a.localeCompare(b);
-    });
-
-    this.setState({ adversarios, filtered: adversarios, isLoading: false }, () => this.openSelectedAdversario());
-  }
-
-  buttonClick = (adversario) => {
-    this.setState({ clicked: true, adversarioAtual: adversario });
-  }
-
-  handleBack = () => {
-    this.setState({ clicked: false });
-  }
-
-  searchTeam = async (e) => {
-    const normalizeString = (str) => str.normalize("NFD").replace(/[̀-ͯ]/g, "");
-    const searchTerm = normalizeString(e.target.value.toUpperCase().trim());
-
-    const filtered = this.state.adversarios.filter(time => {
-      const team = Times(time);
-      const namesToCheck = [team.nomeAtual, ...team.nomesAnteriores];
-      return namesToCheck.some(name => normalizeString(name.toUpperCase().trim()).includes(searchTerm));
-    });
-    filtered.sort((a, b) => {
-      const qtdJogosA = common.getTotalAdversario(this.state.meuTime, a);
-      const qtdJogosB = common.getTotalAdversario(this.state.meuTime, b);
-      if (qtdJogosB !== qtdJogosA) return qtdJogosB - qtdJogosA;
-      return a < b ? -1 : a > b ? 1 : 0;
-    });
-
-    this.setState({ filtered, searchTerm: e.target.value });
-  }
-
-  render() {
-    const meuTime = this.state.meuTime;
-    const filtered = this.state.filtered;
-    const teamStyle = Times(this.props.meuTime);
-    const buttonClickFunction = (adversario) => this.buttonClick(adversario);
     return (
-      <>
-        {this.state.clicked ? <ViewAdversario meuTime={this.props.meuTime} adversario={this.state.adversarioAtual} onBack={this.handleBack} onSelectEstadio={this.props.onSelectEstadio} /> :
-          <div className="App-header" style={{ backgroundColor: teamStyle.backgroundColor, color: teamStyle.letterColor, alignItems: 'normal' }}>
-            <table>
-              <tbody>
-                <input
-                  type="text"
-                  placeholder="Insira o nome do time"
-                  value={this.state.searchTerm}
-                  onChange={this.searchTeam}
-                  style={{ width: '100%', marginBottom: '20px', marginTop: '20px', height: '40px', padding: '5px' }}
+        <Box>
+            <Box sx={{
+                display: 'flex', alignItems: 'center', gap: 1,
+                mb: 3, px: 2, py: 1,
+                backgroundColor: '#161b22',
+                border: '1px solid #30363d',
+                borderRadius: '8px',
+            }}>
+                <SearchIcon sx={{ color: '#8b949e', fontSize: 20 }} />
+                <InputBase
+                    placeholder="Buscar adversário..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    sx={{ flex: 1, color: 'text.primary', fontSize: '0.95rem' }}
                 />
-                {!this.state.isLoading ?
-                  filtered.length > 0 ? filtered.map((teamName) => {
-                    const team = Times(teamName);
-                    const totalAdversario = common.getTotalAdversario(meuTime, teamName);
-                    const nomesAnteriores = team.nomesAnteriores;
-                    return <div key={teamName}>
-                      <button id='selectAdversario' onClick={() => buttonClickFunction(team.nomeAtual)} style={{ backgroundColor: team.backgroundColor, color: team.letterColor, borderColor: teamStyle.backgroundColor === 'white' ? 'black' : 'white', borderStyle: 'solid' }}>
-                        <img
-                          src={import.meta.env.BASE_URL + 'escudos/' + team.escudo + '.png'}
-                          style={{ verticalAlign: 'middle' }}
-                          alt='escudo'
-                          height='75'
-                          width='75'
-                          loading='lazy'
-                          onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png' }}
-                        />
-                        <div id='tituloOpcao' style={{ paddingTop: '5px' }}>{team.nomeAtual}</div>
-                        <div style={{ paddingBottom: '5px', fontSize: '15px', fontWeight: '100' }}>{totalAdversario} {totalAdversario > 1 ? "jogos" : "jogo"}</div>
-                        {nomesAnteriores.length > 0 &&
-                          <div>
-                            <div>Nomes anteriores:</div>
-                            {nomesAnteriores.map((nome) => <div key={nome}>-{nome}</div>)}
-                          </div>
-                        }
-                      </button>
-                    </div>
-                  }) : <div><h4 style={{ color: teamStyle.letterColor, textAlign: 'center', paddingBottom: '50px' }}>Nenhum adversário encontrado</h4></div>
-                  : <div><h4 style={{ color: teamStyle.letterColor, textAlign: 'center', paddingBottom: '50px' }}>Carregando adversários...</h4></div>}
-              </tbody>
-            </table>
-          </div>}
-      </>
-    )
-  }
-}
+            </Box>
 
-export default Adversarios;
+            {filtered.length === 0 && (
+                <Typography color="text.secondary" textAlign="center">Nenhum adversário encontrado</Typography>
+            )}
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 2 }}>
+                {filtered.map(teamName => {
+                    const team = Times(teamName);
+                    const total = common.getTotalAdversario(meuTime, teamName);
+                    const nomesAnterioresVistos = team.nomesAnteriores.filter(n => nomesNosJogos.has(n));
+                    return (
+                        <Box
+                            key={teamName}
+                            onClick={() => setAdversarioAtual(teamName)}
+                            sx={{
+                                cursor: 'pointer',
+                                backgroundColor: team.backgroundColor,
+                                border: `1px solid ${team.letterColor}`,
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                textAlign: 'center',
+                                transition: 'border-color 0.15s, transform 0.15s',
+                                '&:hover': { borderColor: '#8b949e', transform: 'translateY(-2px)' },
+                            }}
+                        >
+                            <Box sx={{ pt: 2, px: 1 }}>
+                                <img
+                                    src={import.meta.env.BASE_URL + 'escudos/' + team.escudo + '.png'}
+                                    alt={teamName}
+                                    width={80}
+                                    height={80}
+                                    loading="lazy"
+                                    style={{ objectFit: 'contain' }}
+                                    onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png'; }}
+                                />
+                            </Box>
+                            <Box sx={{ p: 1.5, pt: 1 }}>
+                                <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.3, color: team.letterColor }}>{team.nomeAtual}</Typography>
+                                <Typography variant="caption" sx={{ color: team.letterColor, opacity: 0.7 }}>
+                                    {total} {total === 1 ? 'jogo' : 'jogos'}
+                                </Typography>
+                                {nomesAnterioresVistos.length > 0 && (
+                                    <Typography variant="caption" sx={{ color: team.letterColor, opacity: 0.5, display: 'block', mt: 0.5, fontSize: '0.65rem', lineHeight: 1.2 }}>
+                                        {nomesAnterioresVistos.join(', ')}
+                                    </Typography>
+                                )}
+                            </Box>
+                        </Box>
+                    );
+                })}
+            </Box>
+        </Box>
+    );
+}

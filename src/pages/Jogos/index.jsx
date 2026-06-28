@@ -1,34 +1,167 @@
+import React, { useState } from 'react';
 import './jogos.css';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import MuiTabs from '@mui/material/Tabs';
+import MuiTab from '@mui/material/Tab';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import LinhaJogo from './components/LinhaJogo';
+import Adversarios from './pages/Adversarios';
+import Anos from './pages/Anos';
+import Estadios from './pages/Estadios';
+import OutrosJogos from './pages/OutrosJogos';
 import Times from './Times';
-import Tabs from './components/Tabs';
 import common from './common';
 
-function Jogos() {
-    const meuTime = "Botafogo";
-    const meusJogos = [...common.jogos].sort((a, b) =>
-        a.data < b.data ? -1 : a.data > b.data ? 1 : 0
-    );
+const meuTime = 'Botafogo';
+const jogos = [...common.jogos].sort((a, b) => b.data.localeCompare(a.data));
 
+const jogosComPlacar = jogos.filter(j => j.golsMandante !== '' && j.golsVisitante !== '');
+const vitorias = common.getVitorias(meuTime, jogosComPlacar);
+const empates = common.getEmpates(meuTime, jogosComPlacar);
+const derrotas = common.getDerrotas(meuTime, jogosComPlacar);
+
+const statBoxStyle = {
+    flex: '1 1 120px',
+    backgroundColor: '#161b22',
+    border: '1px solid #30363d',
+    borderRadius: '8px',
+    p: 2,
+    textAlign: 'center',
+};
+
+function JogosList({ onSelectEstadio, onSelectAdversario }) {
+    let currentYear = null;
     return (
-        <>
-            <div className="App-header" style={{ backgroundColor: Times(meuTime).backgroundColor, marginTop: '64px' }}>
-                <div style={{ margin: '20px' }}>
-                    <p style={{ display: 'inline', color: Times(meuTime).letterColor }}>
-                        Botafogo de Futebol e Regatas
-                    </p>
-                </div>
-                <img
-                    src={import.meta.env.BASE_URL + 'escudos/Botafogo.png'}
-                    alt="Escudo do Botafogo"
-                    style={{ verticalAlign: 'middle', width: '100px', height: '100px' }}
-                    loading='lazy'
-                    onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png' }}
-                />
-                <br />
-                <Tabs meuTime={meuTime} meusJogos={meusJogos} />
-            </div>
-        </>
+        <Box>
+            {jogos.map(jogo => {
+                const year = jogo.data.split('-')[0];
+                const showDivider = year !== currentYear;
+                currentYear = year;
+                return (
+                    <React.Fragment key={jogo.mandante + jogo.visitante + jogo.data}>
+                        {showDivider && (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, my: 3 }}>
+                                <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: 1 }}>
+                                    {year}
+                                </Typography>
+                                <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                            </Box>
+                        )}
+                        <LinhaJogo
+                            meuTime={meuTime}
+                            jogo={jogo}
+                            onSelectEstadio={onSelectEstadio}
+                            onSelectAdversario={onSelectAdversario}
+                        />
+                    </React.Fragment>
+                );
+            })}
+        </Box>
     );
 }
 
-export default Jogos;
+export default function Jogos() {
+    const [tab, setTab] = useState(0);
+    const [subTab, setSubTab] = useState('botafogo');
+    const [selectedEstadio, setSelectedEstadio] = useState('');
+    const [selectedAdversario, setSelectedAdversario] = useState('');
+
+    const selectEstadio = (estadio) => {
+        setTab(2);
+        setSelectedEstadio(estadio);
+        setSelectedAdversario('');
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
+    const selectAdversario = (adversario) => {
+        const nomeAtual = Times(adversario).nomeAtual;
+        setTab(3);
+        setSelectedAdversario(nomeAtual);
+        setSelectedEstadio('');
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
+    return (
+        <Box sx={{ mt: '80px', px: { xs: 2, md: 4 }, pb: 6 }}>
+
+            {/* Header */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <img
+                    src={import.meta.env.BASE_URL + 'escudos/Botafogo.png'}
+                    alt="Botafogo"
+                    style={{ width: 48, height: 48, objectFit: 'contain' }}
+                />
+                <Typography variant="h4">Jogos do Botafogo</Typography>
+            </Box>
+
+            {/* Stats */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
+                <Box sx={statBoxStyle}>
+                    <Typography variant="h4">{jogos.length}</Typography>
+                    <Typography variant="body2" color="text.secondary">jogos</Typography>
+                </Box>
+                <Box sx={{ ...statBoxStyle, borderColor: '#3fb950' }}>
+                    <Typography variant="h4" sx={{ color: '#3fb950' }}>{vitorias}</Typography>
+                    <Typography variant="body2" color="text.secondary">vitórias</Typography>
+                </Box>
+                <Box sx={{ ...statBoxStyle, borderColor: '#e3b341' }}>
+                    <Typography variant="h4" sx={{ color: '#e3b341' }}>{empates}</Typography>
+                    <Typography variant="body2" color="text.secondary">empates</Typography>
+                </Box>
+                <Box sx={{ ...statBoxStyle, borderColor: '#f85149' }}>
+                    <Typography variant="h4" sx={{ color: '#f85149' }}>{derrotas}</Typography>
+                    <Typography variant="body2" color="text.secondary">derrotas</Typography>
+                </Box>
+            </Box>
+
+            {/* Tabs */}
+            <MuiTabs
+                value={tab}
+                onChange={(_, v) => setTab(v)}
+                sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
+            >
+                <MuiTab label="Jogos" />
+                <MuiTab label="Anos" />
+                <MuiTab label="Estádios" />
+                <MuiTab label="Adversários" />
+            </MuiTabs>
+
+            {/* Tab: Jogos */}
+            {tab === 0 && (
+                <Box>
+                    <Box sx={{ mb: 3 }}>
+                        <ToggleButtonGroup
+                            value={subTab}
+                            exclusive
+                            onChange={(_, v) => { if (v) setSubTab(v); }}
+                            size="small"
+                        >
+                            <ToggleButton value="botafogo">Botafogo</ToggleButton>
+                            <ToggleButton value="outros">Outros Jogos</ToggleButton>
+                        </ToggleButtonGroup>
+                    </Box>
+                    {subTab === 'botafogo' && (
+                        <JogosList onSelectEstadio={selectEstadio} onSelectAdversario={selectAdversario} />
+                    )}
+                    {subTab === 'outros' && <OutrosJogos meuTime={meuTime} />}
+                </Box>
+            )}
+
+            {tab === 1 && (
+                <Anos meuTime={meuTime} onSelectEstadio={selectEstadio} onSelectAdversario={selectAdversario} />
+            )}
+
+            {tab === 2 && (
+                <Estadios meuTime={meuTime} meusJogos={jogos} selectedEstadio={selectedEstadio} onSelectAdversario={selectAdversario} />
+            )}
+
+            {tab === 3 && (
+                <Adversarios meuTime={meuTime} meusJogos={jogos} selectedAdversario={selectedAdversario} onSelectEstadio={selectEstadio} />
+            )}
+
+        </Box>
+    );
+}

@@ -1,166 +1,211 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { FaTrophy } from "react-icons/fa";
+import { MdStadium, MdCalendarToday } from "react-icons/md";
 import Times from '../Times';
-import { FaTrophy, FaCalendarAlt } from "react-icons/fa";
-import { MdStadium } from "react-icons/md";
-import Common from "../common";
 
-class LinhaJogo extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            meuTime: props.meuTime,
-            jogo: props.jogo,
-            isLoading: false
-        }
+function hexToRgba(color, alpha) {
+    if (!color) return `rgba(128,128,128,${alpha})`;
+    const c = color.trim();
+    if (c.startsWith('#') && (c.length === 7 || c.length === 4)) {
+        const full = c.length === 4
+            ? '#' + c[1] + c[1] + c[2] + c[2] + c[3] + c[3]
+            : c;
+        const r = parseInt(full.slice(1, 3), 16);
+        const g = parseInt(full.slice(3, 5), 16);
+        const b = parseInt(full.slice(5, 7), 16);
+        if (!isNaN(r)) return `rgba(${r},${g},${b},${alpha})`;
     }
-
-    scrollToTop = () => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
-
-    async componentDidMount() {
-        this._isMounted = true;
-        this.scrollToTop();
-    }
-
-    converteData(data) {
-        var array = data.split("-");
-        return array[2] + "/" + array[1] + "/" + array[0];
-    }
-
-    converteDia(data) {
-        data = new Date(data);
-        var dia = data.getDay();
-        switch (dia) {
-            case 0: return "Segunda";
-            case 1: return "Terça";
-            case 2: return "Quarta";
-            case 3: return "Quinta";
-            case 4: return "Sexta";
-            case 5: return "Sábado";
-            case 6: return "Domingo";
-            default: return "";
-        }
-    }
-
-    render() {
-        const converteDia = (dia) => this.converteDia(dia);
-        const converteData = (data) => this.converteData(data);
-        const mandante = this.props.jogo.mandante;
-        const visitante = this.props.jogo.visitante;
-        const estadio = this.props.jogo.estadio;
-        const jogoData = this.props.jogo.data;
-        const disableTeamClick = this.props.disableTeamClick;
-        const disableEstadioClick = this.props.disableEstadioClick;
-        const mandanteStyle = Times(mandante, jogoData);
-        const visitanteStyle = Times(visitante, jogoData);
-        const meuTimeStyle = Times(this.props.meuTime);
-        const mandanteClickable = !disableTeamClick && mandante !== this.props.meuTime && this.props.onSelectAdversario;
-        const visitanteClickable = !disableTeamClick && visitante !== this.props.meuTime && this.props.onSelectAdversario;
-        const estadioClickable = estadio && estadio !== "" && this.props.onSelectEstadio && !disableEstadioClick;
-        return (
-            <div className='divJogo'
-                style={{
-                    background: "linear-gradient(90deg, " + mandanteStyle.backgroundColor + " 49%, " + visitanteStyle.backgroundColor + " 52%)",
-                    paddingLeft: '10px',
-                    paddingBottom: '10px',
-                    marginBottom: '10px',
-                    width: '100%',
-                    borderColor: meuTimeStyle.backgroundColor === 'white' ? 'black' : 'white'
-                }}
-                key={JSON.stringify(this.props.jogo)}
-            >
-                <div>
-                    <FaCalendarAlt style={{ color: mandanteStyle.letterColor, paddingRight: "5px" }} />
-                    <p style={{
-                        textShadow: Common.textShadow,
-                        color: "white",
-                        display: "inline",
-                    }}>
-                        {converteDia(this.props.jogo.data)}, {converteData(this.props.jogo.data)}
-                    </p>
-                </div>
-                <div>
-                    <p style={{ textShadow: Common.textShadow, color: "white", fontSize: '1em' }}><FaTrophy style={{ color: mandanteStyle.letterColor }} /> {this.props.jogo.campeonato}</p>
-                    <p style={{ textShadow: Common.textShadow, color: "white", marginBottom: '5px', fontSize: '1em' }}>
-                        <span
-                            style={{ cursor: estadioClickable ? 'pointer' : 'default' }}
-                            onClick={estadioClickable ? () => { this.scrollToTop(); this.props.onSelectEstadio(estadio); } : undefined}
-                            title={estadioClickable ? 'Ver estádio' : ''}
-                        >
-                            <MdStadium style={{ color: mandanteStyle.letterColor }} /> {estadio !== "" ? estadio : " - "}
-                        </span>
-                    </p>
-                </div>
-                <div id='placar' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
-                    <p className='nomeTime' style={{
-                        display: 'inline-block',
-                        width: "40%",
-                        textAlign: "right",
-                        paddingRight: '5px',
-                        color: mandanteStyle.letterColor,
-                        verticalAlign: 'middle'
-                    }}>
-                        <span
-                            style={{ cursor: mandanteClickable ? 'pointer' : 'default', display: 'inline-block' }}
-                            onClick={mandanteClickable ? () => { this.scrollToTop(); this.props.onSelectAdversario(mandante); } : undefined}
-                            title={mandanteClickable ? 'Ver adversário' : ''}
-                        >
-                            {mandante.toUpperCase()}
-                        </span>
-                    </p>
-                    <img
-                        className='escudoLinha'
-                        src={import.meta.env.BASE_URL + 'escudos/' + mandanteStyle.escudo + '.png'}
-                        title={this.props.jogo.mandante}
-                        style={{ display: 'inline-block', verticalAlign: 'middle' }}
-                        alt={this.props.jogo.mandante}
-                        loading='lazy'
-                        onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png' }}
-                    />
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: this.props.jogo.golsMandante === "" && this.props.jogo.golsVisitante === "" ? "40px" : "90px", textAlign: "center", fontSize: '2em', textShadow: Common.textShadow, color: "white" }}>
-                        {(this.props.jogo.golsMandante === "WO" || this.props.jogo.golsVisitante === "WO") && <div>WO</div>}
-                        {this.props.jogo.golsMandante === "WO" ? <div>←</div> : this.props.jogo.golsVisitante === "WO" ? <div>→</div> : ''}
-                        {this.props.jogo.golsMandante !== "WO" && this.props.jogo.golsVisitante !== "WO" && this.props.jogo.golsMandante === "" && this.props.jogo.golsVisitante === "" && <p className="horario" style={{ fontSize: "13px", minWidth: "41px" }}>{this.props.jogo.horario ? this.props.jogo.horario : " X "}</p>}
-                        {this.props.jogo.golsMandante !== "WO" && this.props.jogo.golsVisitante !== "WO" && this.props.jogo.golsMandante !== "" && this.props.jogo.golsVisitante !== "" && ' ' + this.props.jogo.golsMandante + ' x ' + this.props.jogo.golsVisitante + ' '}
-                    </div>
-                    <img
-                        className='escudoLinha'
-                        src={import.meta.env.BASE_URL + 'escudos/' + visitanteStyle.escudo + '.png'}
-                        title={this.props.jogo.visitante}
-                        style={{ display: 'inline-block', verticalAlign: 'middle' }}
-                        alt={this.props.jogo.visitante}
-                        loading='lazy'
-                        onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png' }}
-                    />
-                    <p className='nomeTime'
-                        style={{
-                            display: 'inline-block',
-                            width: "40%",
-                            textAlign: "left",
-                            color: visitanteStyle.letterColor,
-                            paddingLeft: '5px',
-                            verticalAlign: 'middle'
-                        }}>
-                        <span
-                            style={{ cursor: visitanteClickable ? 'pointer' : 'default', display: 'inline-block' }}
-                            onClick={visitanteClickable ? () => { this.scrollToTop(); this.props.onSelectAdversario(visitante); } : undefined}
-                            title={visitanteClickable ? 'Ver adversário' : ''}
-                        >
-                            {visitante.toUpperCase()}
-                        </span>
-                    </p>
-                </div>
-                {this.props.jogo.penaltis &&
-                    <div style={{ textAlign: "center", textShadow: Common.textShadow, color: "white" }}>
-                        <div>Pênaltis:</div>
-                        <div>{this.props.jogo.penaltis}</div>
-                    </div>}
-            </div>
-        )
-    }
+    return `rgba(128,128,128,${alpha})`;
 }
 
-export default LinhaJogo;
+function getResultado(jogo, meuTime) {
+    const gm = jogo.golsMandante;
+    const gv = jogo.golsVisitante;
+    if (gm === undefined || gm === null || gm === '' || gv === undefined || gv === null || gv === '') return null;
+    const isMandante = jogo.mandante === meuTime;
+    if (gm === 'WO') return isMandante ? 'V' : 'D';
+    if (gv === 'WO') return isMandante ? 'D' : 'V';
+    const golsMeu = isMandante ? parseInt(gm) : parseInt(gv);
+    const golsAdv = isMandante ? parseInt(gv) : parseInt(gm);
+    if (golsMeu > golsAdv) return 'V';
+    if (golsMeu < golsAdv) return 'D';
+    return 'E';
+}
+
+const resultadoColor = { V: '#3fb950', E: '#e3b341', D: '#f85149' };
+
+const textShadow = '0 0 3px #000, 0 0 3px #000, 0 0 3px #000, 0 0 3px #000';
+
+const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+function getDiaSemana(data) {
+    return diasSemana[new Date(data).getDay()];
+}
+
+function formatData(data) {
+    const [y, m, d] = data.split('-');
+    return `${d}/${m}/${y}`;
+}
+
+export default function LinhaJogo({ meuTime, jogo, onSelectAdversario, onSelectEstadio, disableTeamClick, disableEstadioClick }) {
+    const mandanteStyle = Times(jogo.mandante, jogo.data);
+    const visitanteStyle = Times(jogo.visitante, jogo.data);
+
+    const mandanteClickable = !disableTeamClick && jogo.mandante !== meuTime && !!onSelectAdversario;
+    const visitanteClickable = !disableTeamClick && jogo.visitante !== meuTime && !!onSelectAdversario;
+    const estadioClickable = !!jogo.estadio && jogo.estadio !== '' && !!onSelectEstadio && !disableEstadioClick;
+
+    const resultado = getResultado(jogo, meuTime);
+    const hasScore = jogo.golsMandante !== '' && jogo.golsVisitante !== '';
+    const isWO = jogo.golsMandante === 'WO' || jogo.golsVisitante === 'WO';
+
+    const scrollToTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    const gradBg = `linear-gradient(90deg, ${mandanteStyle.backgroundColor} 49%, ${visitanteStyle.backgroundColor} 52%)`;
+
+    const teamNameSx = (clickable, letterColor) => ({
+        fontWeight: 700,
+        fontSize: '0.65rem',
+        letterSpacing: 0.5,
+        lineHeight: 1.3,
+        color: letterColor || '#fff',
+        cursor: clickable ? 'pointer' : 'default',
+        transition: 'color 0.15s',
+        '&:hover': clickable ? { color: '#93c5fd' } : {},
+    });
+
+    return (
+        <Box sx={{
+            background: gradBg,
+            border: '2px solid #484f58',
+            borderRadius: '10px',
+            mb: 1.5,
+            px: 2,
+            pt: 1.5,
+            pb: 1.25,
+            position: 'relative',
+            transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+            '&:hover': {
+                borderColor: '#6e7681',
+            },
+        }}>
+
+            {/* Result badge */}
+            {resultado && (
+                <Box sx={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    width: 24,
+                    height: 24,
+                    borderRadius: '50%',
+                    backgroundColor: resultadoColor[resultado],
+                    border: '2px solid rgba(0,0,0,0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <Typography sx={{ fontSize: '0.65rem', fontWeight: 800, color: '#0d1117', lineHeight: 1 }}>
+                        {resultado}
+                    </Typography>
+                </Box>
+            )}
+
+            {/* Meta info */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.4, mb: 1.25, pb: 1, borderBottom: '1px solid rgba(0,0,0,0.35)' }}>
+                <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: '#fff', textShadow }}>
+                    <MdCalendarToday size={11} color={mandanteStyle.letterColor} />
+                    {getDiaSemana(jogo.data)}, {formatData(jogo.data)}
+                </Typography>
+                {jogo.campeonato && (
+                    <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: '#fff', textShadow }}>
+                        <FaTrophy size={10} color={mandanteStyle.letterColor} />
+                        {jogo.campeonato}
+                    </Typography>
+                )}
+                {jogo.estadio && (
+                    <Typography
+                        variant="caption"
+                        onClick={estadioClickable ? () => { scrollToTop(); onSelectEstadio(jogo.estadio); } : undefined}
+                        sx={{
+                            display: 'flex', alignItems: 'center', gap: 0.5,
+                            color: '#fff', textShadow,
+                            cursor: estadioClickable ? 'pointer' : 'default',
+                            '&:hover': estadioClickable ? { color: '#93c5fd' } : {},
+                            transition: 'color 0.15s',
+                        }}
+                    >
+                        <MdStadium size={12} color={mandanteStyle.letterColor} />
+                        {jogo.estadio}
+                    </Typography>
+                )}
+            </Box>
+
+            {/* Teams + Score */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+
+                {/* Mandante */}
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                    <Typography
+                        sx={{ ...teamNameSx(mandanteClickable, mandanteStyle.letterColor), textAlign: 'right' }}
+                        onClick={mandanteClickable ? () => { scrollToTop(); onSelectAdversario(jogo.mandante); } : undefined}
+                    >
+                        {jogo.mandante.toUpperCase()}
+                    </Typography>
+                    <img
+                        src={import.meta.env.BASE_URL + 'escudos/' + mandanteStyle.escudo + '.png'}
+                        alt={jogo.mandante}
+                        style={{ width: 44, height: 44, objectFit: 'contain', flexShrink: 0 }}
+                        loading="lazy"
+                        onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png'; }}
+                    />
+                </Box>
+
+                {/* Score */}
+                <Box sx={{ textAlign: 'center', minWidth: 80 }}>
+                    {isWO && (
+                        <Typography sx={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', color: '#fff', textShadow, letterSpacing: 2 }}>
+                            WO
+                        </Typography>
+                    )}
+                    {!isWO && hasScore && (
+                        <Typography sx={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2.2rem', color: '#fff', textShadow, letterSpacing: 3, lineHeight: 1 }}>
+                            {jogo.golsMandante} · {jogo.golsVisitante}
+                        </Typography>
+                    )}
+                    {!isWO && !hasScore && (
+                        <Typography sx={{ fontSize: '1rem', color: '#fff', textShadow, letterSpacing: 1 }}>
+                            {jogo.horario || '×'}
+                        </Typography>
+                    )}
+                    {jogo.penaltis && (
+                        <Typography variant="caption" sx={{ display: 'block', mt: 0.25, color: '#fff', textShadow }}>
+                            pen. {jogo.penaltis}
+                        </Typography>
+                    )}
+                </Box>
+
+                {/* Visitante */}
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 1 }}>
+                    <img
+                        src={import.meta.env.BASE_URL + 'escudos/' + visitanteStyle.escudo + '.png'}
+                        alt={jogo.visitante}
+                        style={{ width: 44, height: 44, objectFit: 'contain', flexShrink: 0 }}
+                        loading="lazy"
+                        onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png'; }}
+                    />
+                    <Typography
+                        sx={{ ...teamNameSx(visitanteClickable, visitanteStyle.letterColor), textAlign: 'left' }}
+                        onClick={visitanteClickable ? () => { scrollToTop(); onSelectAdversario(jogo.visitante); } : undefined}
+                    >
+                        {jogo.visitante.toUpperCase()}
+                    </Typography>
+                </Box>
+
+            </Box>
+
+
+        </Box>
+    );
+}

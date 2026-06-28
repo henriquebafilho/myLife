@@ -1,102 +1,96 @@
-import React, { Component } from 'react';
-import Times from '../Times';
+import { useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 import common from '../common';
 import ViewAno from './viewScreens/ViewAno';
 import Estatisticas from '../components/Estatisticas';
 
-class Anos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meuTime: props.meuTime,
-      jogos: [],
-      anos: [],
-      filtered: [],
-      isLoading: false,
-      clicked: false,
-      anoAtual: '',
-      jogosAno: [],
-      searchTerm: ''
+const jogos = common.jogos;
+const anosDisponiveis = [...new Set(jogos.map(j => j.data.split('-')[0]))].sort().reverse();
+
+export default function Anos({ meuTime, onSelectAdversario, onSelectEstadio }) {
+    const [search, setSearch] = useState('');
+    const [anoAtual, setAnoAtual] = useState(null);
+
+    const filtered = anosDisponiveis.filter(a => a.includes(search.trim()));
+
+    if (anoAtual) {
+        const jogosAno = jogos.filter(j => j.data.split('-')[0] === anoAtual);
+        return (
+            <ViewAno
+                meuTime={meuTime}
+                jogosAno={jogosAno}
+                ano={anoAtual}
+                onBack={() => setAnoAtual(null)}
+                onSelectAdversario={onSelectAdversario}
+                onSelectEstadio={onSelectEstadio}
+            />
+        );
     }
-    this.buttonClick = this.buttonClick.bind(this);
-  }
-
-  async componentDidMount() {
-    const jogos = await this.getJogos();
-    await this.getAnos(jogos);
-  }
-
-  getJogos = async () => {
-    this.setState({ isLoading: true });
-    const jogos = common.jogos;
-    this.setState({ jogos, isLoading: false });
-    return jogos;
-  }
-
-  getAnos = async (jogos = this.state.jogos) => {
-    const anos = [];
-    this.setState({ isLoading: true });
-    for (var i in jogos) {
-      const ano = jogos[i].data.split("-")[0];
-      if (!anos.includes(ano)) anos.push(ano);
-    }
-    anos.sort().reverse();
-    this.setState({ anos, filtered: anos, isLoading: false });
-  }
-
-  buttonClick = (ano) => {
-    const jogosAno = this.state.jogos.filter(jogo => jogo.data.split("-")[0] === ano.toString());
-    this.setState({ clicked: true, anoAtual: ano, jogosAno });
-  }
-
-  handleBack = () => {
-    this.setState({ clicked: false });
-  }
-
-  searchAno = async (e) => {
-    const searchTerm = e.target.value;
-    this.setState({ filtered: this.state.anos.filter(ano => ano.toString().trim().includes(searchTerm.trim())), searchTerm });
-  }
-
-  render() {
-    const meuTime = this.state.meuTime;
-    const meusJogos = this.state.jogos;
-    const buttonClickFunction = (ano) => this.buttonClick(ano);
 
     return (
-      <>
-        {this.state.clicked ? <ViewAno meuTime={this.props.meuTime} meusJogos={meusJogos} jogosAno={this.state.jogosAno} ano={this.state.anoAtual} onBack={this.handleBack} onSelectAdversario={this.props.onSelectAdversario} onSelectEstadio={this.props.onSelectEstadio} /> :
-          <div className="App-header" style={{ backgroundColor: Times(this.props.meuTime).backgroundColor, color: Times(this.props.meuTime).letterColor, alignItems: 'normal' }}>
-            <table>
-              <tbody>
-                <Estatisticas meuTime={meuTime} jogos={meusJogos} />
-                {this.state.isLoading && <h1>Carregando...</h1>}
-                <input
-                  type="number"
-                  inputMode='numeric'
-                  placeholder="Insira o ano"
-                  value={this.state.searchTerm}
-                  onChange={this.searchAno}
-                  style={{ width: '100%', marginBottom: '20px', marginTop: '20px', height: '40px', padding: '5px' }}
-                />
-                {this.state.filtered.length > 0 ?
-                  !this.state.isLoading && this.state.filtered.map(function (i) {
-                    var totalAno = common.getTotalAno(i, meusJogos);
-                    const imagemAno = import.meta.env.BASE_URL + 'anos/' + i + '.png';
-                    return <div key={i}>
-                      <button id='selectAno' onClick={() => buttonClickFunction(i)} style={{ borderColor: Times(meuTime).letterColor, borderStyle: 'solid', backgroundColor: Times(meuTime).backgroundColor, color: Times(meuTime).letterColor }}>
-                        <div><img src={imagemAno} style={{ verticalAlign: 'middle' }} alt='ano' height='150' width='150' loading='lazy' onError={(e) => { e.target.style.display = 'none' }} /></div>
-                        <div id='tituloOpcao' style={{ display: 'inline', padding: '10px', fontSize: '30px' }}>{i}</div>
-                        <div style={{ paddingBottom: '5px', fontSize: '15px', fontWeight: '100' }}>{totalAno} {totalAno > 1 ? "jogos" : "jogo"}</div>
-                      </button>
-                    </div>
-                  }) : <div><h4 style={{ color: Times(this.state.meuTime).letterColor, textAlign: 'center', paddingBottom: '50px' }}>Nenhum ano encontrado</h4></div>}
-              </tbody>
-            </table>
-          </div>}
-      </>
-    )
-  }
-}
+        <Box>
+            <Estatisticas meuTime={meuTime} jogos={jogos} />
 
-export default Anos;
+            <Box sx={{
+                display: 'flex', alignItems: 'center', gap: 1,
+                mb: 3, px: 2, py: 1,
+                backgroundColor: '#161b22',
+                border: '1px solid #30363d',
+                borderRadius: '8px',
+            }}>
+                <SearchIcon sx={{ color: '#8b949e', fontSize: 20 }} />
+                <InputBase
+                    placeholder="Buscar ano..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    inputProps={{ inputMode: 'numeric' }}
+                    sx={{ flex: 1, color: 'text.primary', fontSize: '0.95rem' }}
+                />
+            </Box>
+
+            {filtered.length === 0 && (
+                <Typography color="text.secondary" textAlign="center">Nenhum ano encontrado</Typography>
+            )}
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 2 }}>
+                {filtered.map(ano => {
+                    const total = common.getTotalAno(ano, jogos);
+                    const imagemAno = import.meta.env.BASE_URL + 'anos/' + ano + '.png';
+                    return (
+                        <Box
+                            key={ano}
+                            onClick={() => setAnoAtual(ano)}
+                            sx={{
+                                cursor: 'pointer',
+                                backgroundColor: '#161b22',
+                                border: '1px solid #484f58',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                textAlign: 'center',
+                                transition: 'border-color 0.15s, transform 0.15s',
+                                '&:hover': { borderColor: '#8b949e', transform: 'translateY(-2px)' },
+                            }}
+                        >
+                            <img
+                                src={imagemAno}
+                                alt={ano}
+                                loading="lazy"
+                                style={{ display: 'block', width: '100%', aspectRatio: '1', objectFit: 'cover' }}
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                            />
+                            <Box sx={{ p: 1.5 }}>
+                                <Typography variant="h6" sx={{ lineHeight: 1 }}>{ano}</Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    {total} {total === 1 ? 'jogo' : 'jogos'}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    );
+                })}
+            </Box>
+        </Box>
+    );
+}

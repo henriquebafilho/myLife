@@ -1,50 +1,37 @@
-import React, { Component } from 'react';
-import Times from '../Times';
+import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import LinhaJogo from '../components/LinhaJogo';
 import common from '../common';
 
-class OutrosJogos extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            meuTime: props.meuTime,
-            outrosJogos: [],
-            isLoading: false
-        }
-    }
+const outrosJogos = [...common.outrosJogos].sort((a, b) => b.data.localeCompare(a.data));
 
-    async componentDidMount() {
-        this.setState({ isLoading: true });
-        const outrosJogos = [...common.outrosJogos].sort((a, b) =>
-            a.data > b.data ? -1 : a.data < b.data ? 1 : 0
-        );
-        this.setState({ outrosJogos, isLoading: false });
-    }
-
-    render() {
-        const jogos = this.state.outrosJogos;
-        const meuTimeStyle = Times(this.props.meuTime);
-        let anoAtual = 0;
-
-        return (
-            <div className="jogos-container" style={{ color: meuTimeStyle.letterColor, backgroundColor: meuTimeStyle.backgroundColor }}>
-                {jogos.length > 0 ? jogos.map((jogo, i) => {
-                    let mostraAno = false;
-                    const ano = jogo.data.split("-")[0];
-                    if (anoAtual !== ano) {
-                        anoAtual = ano;
-                        mostraAno = true;
-                    }
-                    return <div key={i}>
-                        {mostraAno && <h1 style={{ textAlign: 'center', color: meuTimeStyle.letterColor, margin: '40px' }}>{ano}</h1>}
-                        <LinhaJogo meuTime={null} jogo={jogo} onSelectEstadio={() => {}} onSelectAdversario={() => {}} />
-                    </div>
-                }) : <div>
-                    <h4 style={{ color: meuTimeStyle.letterColor, textAlign: 'center' }}>Nenhum jogo cadastrado</h4>
-                </div>}
-            </div>
-        )
-    }
+export default function OutrosJogos({ meuTime }) {
+    let currentYear = null;
+    return (
+        <Box>
+            {outrosJogos.length === 0 && (
+                <Typography color="text.secondary" textAlign="center">Nenhum jogo cadastrado</Typography>
+            )}
+            {outrosJogos.map(jogo => {
+                const year = jogo.data.split('-')[0];
+                const showDivider = year !== currentYear;
+                currentYear = year;
+                return (
+                    <React.Fragment key={jogo.mandante + jogo.visitante + jogo.data}>
+                        {showDivider && (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, my: 3 }}>
+                                <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: 1 }}>
+                                    {year}
+                                </Typography>
+                                <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                            </Box>
+                        )}
+                        <LinhaJogo meuTime={null} jogo={jogo} />
+                    </React.Fragment>
+                );
+            })}
+        </Box>
+    );
 }
-
-export default OutrosJogos;
