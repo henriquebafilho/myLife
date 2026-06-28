@@ -169,7 +169,7 @@ let shows = [
     {
         evento: "Rock in Rio 2015",
         bandas: [
-            "System Of A Down",
+            "System of a Down",
             "Queens Of The Stone Age",
             "Hollywood Vampires"
         ],

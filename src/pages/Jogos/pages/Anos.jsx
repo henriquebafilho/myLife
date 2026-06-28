@@ -5,7 +5,6 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import common from '../common';
 import ViewAno from './viewScreens/ViewAno';
-import Estatisticas from '../components/Estatisticas';
 
 const jogos = common.jogos;
 const anosDisponiveis = [...new Set(jogos.map(j => j.data.split('-')[0]))].sort().reverse();
@@ -32,8 +31,6 @@ export default function Anos({ meuTime, onSelectAdversario, onSelectEstadio }) {
 
     return (
         <Box>
-            <Estatisticas meuTime={meuTime} jogos={jogos} />
-
             <Box sx={{
                 display: 'flex', alignItems: 'center', gap: 1,
                 mb: 3, px: 2, py: 1,
