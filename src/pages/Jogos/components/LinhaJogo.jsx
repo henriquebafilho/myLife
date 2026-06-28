@@ -92,7 +92,7 @@ export default function LinhaJogo({ meuTime, jogo, onSelectAdversario, onSelectE
         }}>
 
             {/* Result badge */}
-            {resultado && (
+            {resultado && meuTime && (
                 <Box sx={{
                     position: 'absolute',
                     top: 10,

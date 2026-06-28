@@ -1111,8 +1111,8 @@ let shows = [
     {
         evento: "D.R.I e Ratos de Porão",
         bandas: [
-            "Ratos de Porão",
-            "D.R.I"
+            "D.R.I",
+            "Ratos de Porão"
         ],
         data: "20/03/2026",
         local: "Circo Voador"
@@ -1120,8 +1120,8 @@ let shows = [
     {
         evento: "Cause of Death 35 Years",
         bandas: [
-            "Podridão",
-            "Obituary"
+            "Obituary",
+            "Podridão"
         ],
         data: "24/02/2026",
         local: "Agyto"

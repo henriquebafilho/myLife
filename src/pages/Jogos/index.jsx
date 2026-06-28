@@ -92,7 +92,7 @@ export default function Jogos() {
             {/* Tabs */}
             <MuiTabs
                 value={tab}
-                onChange={(_, v) => setTab(v)}
+                onChange={(_, v) => { setTab(v); window.scrollTo({ top: 0, behavior: 'auto' }); }}
                 sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
             >
                 <MuiTab label="Jogos" />
@@ -108,7 +108,7 @@ export default function Jogos() {
                         <ToggleButtonGroup
                             value={subTab}
                             exclusive
-                            onChange={(_, v) => { if (v) setSubTab(v); }}
+                            onChange={(_, v) => { if (v) { setSubTab(v); window.scrollTo({ top: 0, behavior: 'auto' }); } }}
                             size="small"
                         >
                             <ToggleButton value="botafogo">Botafogo</ToggleButton>

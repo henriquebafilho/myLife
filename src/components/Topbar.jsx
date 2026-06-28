@@ -38,6 +38,11 @@ export default function Topbar() {
     const [currentScreen, setCurrentScreen] = useState('home');
     const CurrentContent = screenMap[currentScreen];
 
+    const navigate = (key) => {
+        setCurrentScreen(key);
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
     return (
         <>
             {/* AppBar */}
@@ -45,7 +50,7 @@ export default function Topbar() {
                 <Toolbar>
                     <Typography
                         variant="h6" noWrap component="div"
-                        onClick={() => setCurrentScreen('home')}
+                        onClick={() => navigate('home')}
                         sx={{ cursor: 'pointer', '&:hover': { color: '#58a6ff' }, transition: 'color 0.2s ease' }}
                     >
                         Henrique Filho
@@ -73,7 +78,7 @@ export default function Topbar() {
                 {navItems.map(item => (
                     <Tooltip title={item.title} placement="right" key={item.key}>
                         <IconButton
-                            onClick={() => setCurrentScreen(item.key)}
+                            onClick={() => navigate(item.key)}
                             sx={{
                                 width: 44,
                                 height: 44,
@@ -116,7 +121,7 @@ export default function Topbar() {
             }}>
                 <BottomNavigation
                     value={currentScreen}
-                    onChange={(_, value) => setCurrentScreen(value)}
+                    onChange={(_, value) => navigate(value)}
                     sx={{ backgroundColor: '#161b22' }}
                 >
                     {navItems.map(item => (

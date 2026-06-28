@@ -73,7 +73,10 @@ const statBoxStyle = {
     textAlign: 'center',
 };
 
-function ShowCard({ show }) {
+function ShowCard({ show, onSelectLocal }) {
+    const emOrdem = show.bandas;
+    const total = emOrdem.length;
+
     return (
         <Box sx={{
             display: 'flex',
@@ -84,25 +87,46 @@ function ShowCard({ show }) {
             borderBottom: '1px solid #30363d',
             '&:last-child': { borderBottom: 'none' },
         }}>
-            <Typography variant="caption" color="text.secondary" sx={{ minWidth: 90, pt: 0.3 }}>
-                {formatDate(show.data)}
-            </Typography>
-            <Box sx={{ flex: 1 }}>
-                <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
-                    {show.evento}
+            <Box sx={{ minWidth: 90, pt: 0.3 }}>
+                <Typography variant="caption" color="text.secondary">
+                    {formatDate(show.data)}
                 </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 0.5 }}>
-                    {show.bandas.map(banda => (
-                        <Chip key={banda} label={banda} size="small" sx={{
-                            backgroundColor: 'rgba(88,166,255,0.1)',
-                            color: '#58a6ff',
-                            border: '1px solid rgba(88,166,255,0.2)',
-                            fontSize: '0.7rem',
-                            height: 22,
-                        }} />
-                    ))}
+            </Box>
+            <Box sx={{ flex: 1 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                    {emOrdem.map((banda, i) => {
+                        const isHeadliner = i === 0;
+                        const progress = total === 1 ? 1 : 1 - i / (total - 1);
+                        const fontSize = 0.7 + progress * 0.55;
+                        const opacity = 0.45 + progress * 0.55;
+                        return (
+                            <Typography key={banda} sx={{
+                                fontSize: `${fontSize}rem`,
+                                fontWeight: isHeadliner ? 700 : 500,
+                                opacity,
+                                lineHeight: 1.3,
+                                color: 'text.primary',
+                            }}>
+                                {banda}
+                            </Typography>
+                        );
+                    })}
                 </Box>
-                <Typography variant="caption" color="text.secondary">{show.local}</Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
+                    {show.evento} ·{' '}
+                    <Typography
+                        component="span"
+                        variant="caption"
+                        onClick={() => onSelectLocal && onSelectLocal(normalizeLocal(show.local))}
+                        sx={{
+                            cursor: onSelectLocal ? 'pointer' : 'default',
+                            color: onSelectLocal ? '#58a6ff' : 'text.secondary',
+                            '&:hover': onSelectLocal ? { textDecoration: 'underline' } : {},
+                        }}
+                    >
+                        {show.local}
+                    </Typography>
+                </Typography>
             </Box>
         </Box>
     );
@@ -134,6 +158,12 @@ export default function Shows() {
     const [bandaSearch, setBandaSearch] = useState('');
     const [localSearch, setLocalSearch] = useState('');
 
+    const selectLocal = (local) => {
+        setTab(2);
+        setLocalSearch(local);
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
     const normalize = str => str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
     const filteredBandas = bandas.filter(b => normalize(b).includes(normalize(bandaSearch)));
@@ -161,7 +191,7 @@ export default function Shows() {
                 <Box sx={statBoxStyle}>
                     <Typography variant="h5" sx={{ mb: 0.25 }}>{locais[0]}</Typography>
                     <Typography variant="body2" color="text.secondary">
-                        local mais visitado · {byLocal[locais[0]].length} shows
+                        casa de shows mais frequentada · {byLocal[locais[0]].length} shows
                     </Typography>
                 </Box>
             </Box>
@@ -169,7 +199,7 @@ export default function Shows() {
             {/* Tabs */}
             <MuiTabs
                 value={tab}
-                onChange={(_, v) => setTab(v)}
+                onChange={(_, v) => { setTab(v); window.scrollTo({ top: 0, behavior: 'auto' }); }}
                 sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
             >
                 <MuiTab label="Eventos" />
@@ -202,7 +232,7 @@ export default function Shows() {
                                             <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
                                         </Box>
                                     )}
-                                    <ShowCard show={show} />
+                                    <ShowCard show={show} onSelectLocal={selectLocal} />
                                 </React.Fragment>
                             );
                         });
