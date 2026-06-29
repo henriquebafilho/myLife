@@ -652,7 +652,7 @@ let cds = [
     {
         banda: "Korzus",
         ano: 2014,
-        album: "LEGION"
+        album: "Legion"
     },
     {
         banda: "Kreator",
@@ -662,7 +662,7 @@ let cds = [
     {
         banda: "Krisiun",
         ano: 1998,
-        album: "Apocalyptic Revelations"
+        album: "Apocalyptic Revelation"
     },
     {
         banda: "Krisiun",
