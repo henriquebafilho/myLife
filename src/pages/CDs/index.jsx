@@ -95,34 +95,15 @@ export default function CDs() {
                     size="small"
                 >
                     <ToggleButton value="todos">Todos</ToggleButton>
-                    <ToggleButton value="bandas">Por Banda</ToggleButton>
+                    <ToggleButton value="bandas">Banda</ToggleButton>
                 </ToggleButtonGroup>
             </Box>
 
-            {/* Todos — grouped by band, all visible */}
+            {/* Todos — flat grid, no grouping */}
             {view === 'todos' && (
-                <Box>
-                    {bands.map(banda => (
-                        <Box key={banda} sx={{ mb: 5 }}>
-                            <Box sx={{
-                                display: 'flex',
-                                alignItems: 'baseline',
-                                gap: 2,
-                                mb: 2,
-                                pb: 1,
-                                borderBottom: '1px solid #30363d',
-                            }}>
-                                <Typography variant="h5">{banda}</Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {grouped[banda].length} {grouped[banda].length === 1 ? 'CD' : 'CDs'}
-                                </Typography>
-                            </Box>
-                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 3 }}>
-                                {grouped[banda].map(cd => (
-                                    <CDCard key={cd.banda + cd.album} cd={cd} />
-                                ))}
-                            </Box>
-                        </Box>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 3 }}>
+                    {cds.map(cd => (
+                        <CDCard key={cd.banda + cd.album} cd={cd} />
                     ))}
                 </Box>
             )}
