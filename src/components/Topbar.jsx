@@ -12,11 +12,13 @@ import HomeIcon from '@mui/icons-material/Home';
 import StadiumIcon from '@mui/icons-material/Stadium';
 import MusicNote from '@mui/icons-material/MusicNote';
 import Album from '@mui/icons-material/Album';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import CDs from '../pages/CDs/index';
 import VoltarAoTopo from './VoltarAoTopo';
 import Jogos from '../pages/Jogos/index';
 import Shows from '../pages/Shows/index';
 import Home from '../pages/Home/index';
+import LinhaDoTempo from '../pages/LinhaDoTempo/index';
 
 const RAIL_WIDTH = 65;
 
@@ -25,6 +27,7 @@ const screenMap = {
     jogos: Jogos,
     shows: Shows,
     cds: CDs,
+    timeline: LinhaDoTempo,
 };
 
 const navItems = [
@@ -32,6 +35,7 @@ const navItems = [
     { title: 'Jogos', key: 'jogos', icon: <StadiumIcon /> },
     { title: 'Shows', key: 'shows', icon: <MusicNote /> },
     { title: 'CDs', key: 'cds', icon: <Album /> },
+    { title: 'Linha do Tempo', key: 'timeline', icon: <TimelineIcon /> },
 ];
 
 export default function Topbar() {

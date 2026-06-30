@@ -3,8 +3,13 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import 'flag-icons/css/flag-icons.min.css';
 import Times from '../Times';
 import common from '../common';
+import paises from '../paises';
+import estados from '../estados';
 import ViewAdversario from './viewScreens/ViewAdversario';
 
 const normalize = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
@@ -28,8 +33,53 @@ const buildAdversarios = (meuTime) => {
     return arr;
 };
 
+function AdversarioCard({ teamName, meuTime, onSelect }) {
+    const team = Times(teamName);
+    const total = common.getTotalAdversario(meuTime, teamName);
+    const nomesAnterioresVistos = team.nomesAnteriores.filter(n => nomesNosJogos.has(n));
+    return (
+        <Box
+            onClick={() => onSelect(teamName)}
+            sx={{
+                cursor: 'pointer',
+                backgroundColor: team.backgroundColor,
+                border: '1px solid #fff',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                textAlign: 'center',
+                transition: 'border-color 0.15s, transform 0.15s',
+                '&:hover': { borderColor: '#8b949e', transform: 'translateY(-2px)' },
+            }}
+        >
+            <Box sx={{ pt: 2, px: 1 }}>
+                <img
+                    src={import.meta.env.BASE_URL + 'escudos/' + team.escudo + '.png'}
+                    alt={teamName}
+                    width={80}
+                    height={80}
+                    loading="lazy"
+                    style={{ objectFit: 'contain' }}
+                    onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png'; }}
+                />
+            </Box>
+            <Box sx={{ p: 1.5, pt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.3, color: team.letterColor }}>{team.nomeAtual}</Typography>
+                <Typography variant="caption" sx={{ color: team.letterColor, opacity: 0.7 }}>
+                    {total} {total === 1 ? 'jogo' : 'jogos'}
+                </Typography>
+                {nomesAnterioresVistos.length > 0 && (
+                    <Typography variant="caption" sx={{ color: team.letterColor, opacity: 0.5, display: 'block', mt: 0.5, fontSize: '0.65rem', lineHeight: 1.2 }}>
+                        {nomesAnterioresVistos.join(', ')}
+                    </Typography>
+                )}
+            </Box>
+        </Box>
+    );
+}
+
 export default function Adversarios({ meuTime, selectedAdversario, onSelectEstadio }) {
     const [search, setSearch] = useState('');
+    const [filtro, setFiltro] = useState('todos');
     const [adversarioAtual, setAdversarioAtual] = useState(null);
 
     const todosAdversarios = useMemo(() => buildAdversarios(meuTime), [meuTime]);
@@ -44,13 +94,16 @@ export default function Adversarios({ meuTime, selectedAdversario, onSelectEstad
     }, [selectedAdversario, todosAdversarios]);
 
     const filtered = useMemo(() => {
-        if (!search.trim()) return todosAdversarios;
+        let list = todosAdversarios;
+        if (filtro === 'brasileiros') list = list.filter(n => !paises[n]);
+        if (filtro === 'internacionais') list = list.filter(n => !!paises[n]);
+        if (!search.trim()) return list;
         const term = normalize(search);
-        return todosAdversarios.filter(name => {
+        return list.filter(name => {
             const team = Times(name);
             return [team.nomeAtual, ...team.nomesAnteriores].some(n => normalize(n).includes(term));
         });
-    }, [search, todosAdversarios]);
+    }, [search, filtro, todosAdversarios]);
 
     if (adversarioAtual) {
         return (
@@ -63,11 +116,42 @@ export default function Adversarios({ meuTime, selectedAdversario, onSelectEstad
         );
     }
 
+    const byPais = useMemo(() => {
+        if (filtro !== 'internacionais') return null;
+        const map = {};
+        filtered.forEach(name => {
+            const info = paises[name];
+            if (!info) return;
+            if (!map[info.pais]) map[info.pais] = { bandeira: info.codigo, times: [] };
+            map[info.pais].times.push(name);
+        });
+        return Object.keys(map).sort().map(p => ({ pais: p, ...map[p] }));
+    }, [filtro, filtered]);
+
+    const byEstado = useMemo(() => {
+        if (filtro !== 'brasileiros') return null;
+        const map = {};
+        filtered.forEach(name => {
+            const info = estados[name];
+            const key = info ? info.estado : 'Outros';
+            const uf = info ? info.uf : '?';
+            if (!map[key]) map[key] = { uf, times: [] };
+            map[key].times.push(name);
+        });
+        return Object.keys(map)
+            .sort((a, b) => {
+                const totalA = map[a].times.reduce((sum, n) => sum + common.getTotalAdversario(meuTime, n), 0);
+                const totalB = map[b].times.reduce((sum, n) => sum + common.getTotalAdversario(meuTime, n), 0);
+                return totalB - totalA;
+            })
+            .map(e => ({ estado: e, ...map[e] }));
+    }, [filtro, filtered]);
+
     return (
         <Box>
             <Box sx={{
                 display: 'flex', alignItems: 'center', gap: 1,
-                mb: 3, px: 2, py: 1,
+                mb: 2, px: 2, py: 1,
                 backgroundColor: '#161b22',
                 border: '1px solid #30363d',
                 borderRadius: '8px',
@@ -81,56 +165,73 @@ export default function Adversarios({ meuTime, selectedAdversario, onSelectEstad
                 />
             </Box>
 
+            <ToggleButtonGroup
+                value={filtro}
+                exclusive
+                onChange={(_, v) => { if (v) setFiltro(v); }}
+                size="small"
+                sx={{ mb: 3 }}
+            >
+                <ToggleButton value="todos">Todos</ToggleButton>
+                <ToggleButton value="brasileiros">Brasileiros</ToggleButton>
+                <ToggleButton value="internacionais">Internacionais</ToggleButton>
+            </ToggleButtonGroup>
+
             {filtered.length === 0 && (
                 <Typography color="text.secondary" textAlign="center">Nenhum adversário encontrado</Typography>
             )}
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 2 }}>
-                {filtered.map(teamName => {
-                    const team = Times(teamName);
-                    const total = common.getTotalAdversario(meuTime, teamName);
-                    const nomesAnterioresVistos = team.nomesAnteriores.filter(n => nomesNosJogos.has(n));
-                    return (
-                        <Box
-                            key={teamName}
-                            onClick={() => setAdversarioAtual(teamName)}
-                            sx={{
-                                cursor: 'pointer',
-                                backgroundColor: team.backgroundColor,
-                                border: '1px solid #fff',
-                                borderRadius: '8px',
-                                overflow: 'hidden',
-                                textAlign: 'center',
-                                transition: 'border-color 0.15s, transform 0.15s',
-                                '&:hover': { borderColor: '#8b949e', transform: 'translateY(-2px)' },
-                            }}
-                        >
-                            <Box sx={{ pt: 2, px: 1 }}>
-                                <img
-                                    src={import.meta.env.BASE_URL + 'escudos/' + team.escudo + '.png'}
-                                    alt={teamName}
-                                    width={80}
-                                    height={80}
-                                    loading="lazy"
-                                    style={{ objectFit: 'contain' }}
-                                    onError={(e) => { e.target.src = import.meta.env.BASE_URL + 'escudos/escudo.png'; }}
-                                />
-                            </Box>
-                            <Box sx={{ p: 1.5, pt: 1 }}>
-                                <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.3, color: team.letterColor }}>{team.nomeAtual}</Typography>
-                                <Typography variant="caption" sx={{ color: team.letterColor, opacity: 0.7 }}>
-                                    {total} {total === 1 ? 'jogo' : 'jogos'}
-                                </Typography>
-                                {nomesAnterioresVistos.length > 0 && (
-                                    <Typography variant="caption" sx={{ color: team.letterColor, opacity: 0.5, display: 'block', mt: 0.5, fontSize: '0.65rem', lineHeight: 1.2 }}>
-                                        {nomesAnterioresVistos.join(', ')}
-                                    </Typography>
-                                )}
-                            </Box>
+            {filtro === 'internacionais' && byPais ? (
+                byPais.map(({ pais, bandeira, times }) => (
+                    <Box key={pais} sx={{ mb: 4 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, pb: 1, borderBottom: '1px solid #30363d' }}>
+                            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <span className={`fi fi-${bandeira}`} style={{ fontSize: '1.2rem', borderRadius: '2px' }} />
+                                {pais}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {times.length} {times.length === 1 ? 'time' : 'times'}
+                            </Typography>
                         </Box>
-                    );
-                })}
-            </Box>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 2 }}>
+                            {times.map(name => (
+                                <AdversarioCard key={name} teamName={name} meuTime={meuTime} onSelect={setAdversarioAtual} />
+                            ))}
+                        </Box>
+                    </Box>
+                ))
+            ) : filtro === 'brasileiros' && byEstado ? (
+                byEstado.map(({ estado, uf, times }) => (
+                    <Box key={estado} sx={{ mb: 4 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, pb: 1, borderBottom: '1px solid #30363d' }}>
+                            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                <Box component="span" sx={{
+                                    fontSize: '0.7rem', fontWeight: 700, px: 0.75, py: 0.25,
+                                    backgroundColor: '#30363d', borderRadius: '4px',
+                                    color: '#8b949e', letterSpacing: 0.5,
+                                }}>
+                                    {uf}
+                                </Box>
+                                {estado}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {times.length} {times.length === 1 ? 'time' : 'times'}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 2 }}>
+                            {times.map(name => (
+                                <AdversarioCard key={name} teamName={name} meuTime={meuTime} onSelect={setAdversarioAtual} />
+                            ))}
+                        </Box>
+                    </Box>
+                ))
+            ) : (
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 2 }}>
+                    {filtered.map(teamName => (
+                        <AdversarioCard key={teamName} teamName={teamName} meuTime={meuTime} onSelect={setAdversarioAtual} />
+                    ))}
+                </Box>
+            )}
         </Box>
     );
 }

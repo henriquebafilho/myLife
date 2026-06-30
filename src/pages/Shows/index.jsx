@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import MuiTabs from '@mui/material/Tabs';
 import MuiTab from '@mui/material/Tab';
-import Chip from '@mui/material/Chip';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -132,26 +131,6 @@ function ShowCard({ show, onSelectLocal }) {
     );
 }
 
-function Section({ title, count, children }) {
-    return (
-        <Box sx={{ mb: 5 }}>
-            <Box sx={{
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: 2,
-                mb: 1.5,
-                pb: 1,
-                borderBottom: '1px solid #30363d',
-            }}>
-                <Typography variant="h5">{title}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {count} {count === 1 ? 'show' : 'shows'}
-                </Typography>
-            </Box>
-            {children}
-        </Box>
-    );
-}
 
 export default function Shows() {
     const [tab, setTab] = useState(0);
@@ -203,8 +182,8 @@ export default function Shows() {
                 sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
             >
                 <MuiTab label="Eventos" />
-                <MuiTab label="Por Banda" />
-                <MuiTab label="Por Local" />
+                <MuiTab label="Bandas" />
+                <MuiTab label="Local" />
             </MuiTabs>
 
             {/* Eventos */}
@@ -240,7 +219,7 @@ export default function Shows() {
                 </Box>
             )}
 
-            {/* Por Banda */}
+            {/* Bandas */}
             {tab === 1 && (
                 <Box>
                     <Box sx={{
@@ -274,7 +253,7 @@ export default function Shows() {
                             </AccordionSummary>
                             <AccordionDetails sx={{ pt: 0, borderTop: '1px solid #30363d' }}>
                                 {byBanda[banda].map(show => (
-                                    <ShowCard key={show.evento + show.data} show={show} />
+                                    <ShowCard key={show.evento + show.data} show={show} onSelectLocal={selectLocal} />
                                 ))}
                             </AccordionDetails>
                         </Accordion>
@@ -316,7 +295,7 @@ export default function Shows() {
                             </AccordionSummary>
                             <AccordionDetails sx={{ pt: 0, borderTop: '1px solid #30363d' }}>
                                 {byLocal[local].map(show => (
-                                    <ShowCard key={show.evento + show.data} show={show} />
+                                    <ShowCard key={show.evento + show.data} show={show} onSelectLocal={selectLocal} />
                                 ))}
                             </AccordionDetails>
                         </Accordion>
