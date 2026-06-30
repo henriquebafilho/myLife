@@ -27,7 +27,7 @@ const allEvents = [
     ...jogos.map(j => ({ type: 'jogo', isoDate: j.data, raw: j })),
     ...outros.map(j => ({ type: 'outro', isoDate: j.data, raw: j })),
     ...shows.map(s => ({ type: 'show', isoDate: showToISO(s.data), raw: s })),
-].sort((a, b) => a.isoDate.localeCompare(b.isoDate));
+].sort((a, b) => b.isoDate.localeCompare(a.isoDate));
 
 const byYear = {};
 allEvents.forEach(e => {
