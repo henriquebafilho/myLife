@@ -54,20 +54,96 @@ const allAnos = Array.from(new Set([
     ...Object.keys(showsPorAno),
 ])).sort();
 
+const todosPorAno = {};
+allAnos.forEach(ano => {
+    todosPorAno[ano] = (jogosPorAno[ano] || 0) + (showsPorAno[ano] || 0);
+});
+
 const melhorAnoJogos = Object.entries(jogosPorAno).sort((a, b) => b[1] - a[1])[0];
 const melhorAnoShows = Object.entries(showsPorAno).sort((a, b) => b[1] - a[1])[0];
+const melhorAnoTodos = Object.entries(todosPorAno).sort((a, b) => b[1] - a[1])[0];
 
-function GraficoPorAno({ dados, cor, corDestaque, label }) {
+function GraficoPorAno({ dados, cor, corDestaque, label, dadosStack, cor2, label2 }) {
     const [hover, setHover] = useState(null);
-    const max = Math.max(...dados.map(d => d.count), 1);
-    const melhorAno = dados.reduce((best, d) => d.count > best.count ? d : best, { count: 0 }).ano;
+    const totais = dadosStack
+        ? dados.map((d, i) => d.count + (dadosStack[i]?.count || 0))
+        : dados.map(d => d.count);
+    const max = Math.max(...totais, 1);
+    const melhorAno = dadosStack
+        ? allAnos[totais.indexOf(Math.max(...totais))]
+        : dados.reduce((best, d) => d.count > best.count ? d : best, { count: 0 }).ano;
 
     return (
         <Box>
             <Box sx={{ position: 'relative', display: 'flex', alignItems: 'flex-end', gap: '2px', height: 80, mb: 1 }}>
-                {dados.map(({ ano, count }) => {
+                {dados.map(({ ano, count }, idx) => {
                     const isHover = hover === ano;
-                    const isBest = ano === melhorAno && count > 0;
+                    const count2 = dadosStack ? (dadosStack[idx]?.count || 0) : 0;
+                    const total = dadosStack ? count + count2 : count;
+                    const isBest = ano === melhorAno && total > 0;
+
+                    if (dadosStack) {
+                        return (
+                            <Box
+                                key={ano}
+                                onMouseEnter={() => setHover(ano)}
+                                onMouseLeave={() => setHover(null)}
+                                sx={{
+                                    flex: 1,
+                                    height: total > 0 ? `${Math.max((total / max) * 100, 4)}%` : '4%',
+                                    position: 'relative',
+                                    cursor: 'default',
+                                }}
+                            >
+                                <Box sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column-reverse',
+                                    borderRadius: '2px 2px 0 0',
+                                    overflow: 'hidden',
+                                    opacity: isHover ? 1 : isBest ? 0.95 : 0.75,
+                                    transition: 'opacity 0.1s',
+                                }}>
+                                    {count > 0 && <Box sx={{ flex: count, backgroundColor: cor }} />}
+                                    {count2 > 0 && <Box sx={{ flex: count2, backgroundColor: cor2 }} />}
+                                    {total === 0 && <Box sx={{ flex: 1, backgroundColor: '#21262d' }} />}
+                                </Box>
+                                {isHover && total > 0 && (
+                                    <Box sx={{
+                                        position: 'absolute',
+                                        bottom: '100%',
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        mb: 0.5,
+                                        backgroundColor: '#30363d',
+                                        border: '1px solid #484f58',
+                                        borderRadius: '4px',
+                                        px: 0.75,
+                                        py: 0.25,
+                                        whiteSpace: 'nowrap',
+                                        zIndex: 10,
+                                        pointerEvents: 'none',
+                                    }}>
+                                        {count > 0 && (
+                                            <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: cor }}>
+                                                {count} {label}
+                                            </Typography>
+                                        )}
+                                        {count2 > 0 && (
+                                            <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: cor2 }}>
+                                                {count2} {label2}
+                                            </Typography>
+                                        )}
+                                        <Typography sx={{ fontSize: '0.6rem', color: '#8b949e' }}>
+                                            {ano}
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+                        );
+                    }
+
                     return (
                         <Box
                             key={ano}
@@ -176,16 +252,30 @@ function HighlightCard({ label, value, detail }) {
 }
 
 export default function Home({ onNavigate }) {
-    const [grafFiltro, setGrafFiltro] = useState('jogos');
+    const [grafFiltro, setGrafFiltro] = useState('tudo');
     const botafogoShield = import.meta.env.BASE_URL + 'escudos/Botafogo.png';
     const foto = import.meta.env.BASE_URL + 'foto.png';
 
-    const dadosGrafico = allAnos.map(ano => ({
-        ano,
-        count: grafFiltro === 'jogos' ? (jogosPorAno[ano] || 0) : (showsPorAno[ano] || 0),
-    }));
+    const dadosJogos = allAnos.map(ano => ({ ano, count: jogosPorAno[ano] || 0 }));
+    const dadosShows = allAnos.map(ano => ({ ano, count: showsPorAno[ano] || 0 }));
 
-    const melhor = grafFiltro === 'jogos' ? melhorAnoJogos : melhorAnoShows;
+    const dadosGrafico = grafFiltro === 'jogos' ? dadosJogos
+        : grafFiltro === 'shows' ? dadosShows
+        : dadosJogos;
+
+    const dadosStack = grafFiltro === 'tudo' ? dadosShows : null;
+
+    const melhor = grafFiltro === 'jogos' ? melhorAnoJogos
+        : grafFiltro === 'shows' ? melhorAnoShows
+        : melhorAnoTodos;
+
+    const melhorLabel = grafFiltro === 'jogos' ? 'jogos'
+        : grafFiltro === 'shows' ? 'shows'
+        : 'eventos';
+
+    const melhorColor = grafFiltro === 'jogos' ? '#3fb950'
+        : grafFiltro === 'shows' ? '#e3b341'
+        : '#e6edf3';
 
     return (
         <Box sx={{ mt: '80px', px: { xs: 2, md: 6 }, pb: 6 }}>
@@ -226,26 +316,44 @@ export default function Home({ onNavigate }) {
                         <Typography variant="h6">Por ano</Typography>
                         {melhor && (
                             <Typography variant="caption" color="text.secondary">
-                                melhor ano: <Box component="span" sx={{ color: grafFiltro === 'jogos' ? '#3fb950' : '#e3b341', fontWeight: 700 }}>{melhor[0]}</Box>
-                                {' '}· {melhor[1]} {grafFiltro === 'jogos' ? 'jogos' : 'shows'}
+                                melhor ano: <Box component="span" sx={{ color: melhorColor, fontWeight: 700 }}>{melhor[0]}</Box>
+                                {' '}· {melhor[1]} {melhorLabel}
                             </Typography>
                         )}
                     </Box>
-                    <ToggleButtonGroup
-                        value={grafFiltro}
-                        exclusive
-                        onChange={(_, v) => { if (v) setGrafFiltro(v); }}
-                        size="small"
-                    >
-                        <ToggleButton value="jogos">Jogos</ToggleButton>
-                        <ToggleButton value="shows">Shows</ToggleButton>
-                    </ToggleButtonGroup>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        {grafFiltro === 'tudo' && (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <Box sx={{ width: 10, height: 10, borderRadius: '2px', backgroundColor: '#58a6ff' }} />
+                                    <Typography variant="caption" color="text.secondary">jogos</Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <Box sx={{ width: 10, height: 10, borderRadius: '2px', backgroundColor: '#e3b341' }} />
+                                    <Typography variant="caption" color="text.secondary">shows</Typography>
+                                </Box>
+                            </Box>
+                        )}
+                        <ToggleButtonGroup
+                            value={grafFiltro}
+                            exclusive
+                            onChange={(_, v) => { if (v) setGrafFiltro(v); }}
+                            size="small"
+                        >
+                            <ToggleButton value="tudo">Tudo</ToggleButton>
+                            <ToggleButton value="jogos">Jogos</ToggleButton>
+                            <ToggleButton value="shows">Shows</ToggleButton>
+                        </ToggleButtonGroup>
+                    </Box>
                 </Box>
                 <GraficoPorAno
                     dados={dadosGrafico}
-                    cor={grafFiltro === 'jogos' ? '#58a6ff' : '#e3b341'}
-                    corDestaque={grafFiltro === 'jogos' ? '#3fb950' : '#f0a500'}
-                    label={grafFiltro === 'jogos' ? 'jogos' : 'shows'}
+                    dadosStack={dadosStack}
+                    cor='#58a6ff'
+                    corDestaque='#3fb950'
+                    cor2='#e3b341'
+                    label='jogos'
+                    label2='shows'
                 />
             </Box>
 
