@@ -1,8 +1,4 @@
 let jogos = [
-    { "mandante": "Botafogo", "visitante": "Vitória", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-07-23", "estadio": "Nilton Santos", "horario": "19:30" },
-    { "mandante": "Botafogo", "visitante": "Santos", "golsMandante": 1, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-07-16", "estadio": "Nilton Santos", "horario": "19:30" },
-    { "mandante": "Dynamo Moscow", "visitante": "Botafogo", "golsMandante": 0, "golsVisitante": 2, "campeonato": "Brothers Cup", "data": "2026-07-10", "estadio": "VTB Arena" },
-    { "mandante": "CSKA Moscow", "visitante": "Botafogo", "golsMandante": 0, "golsVisitante": 2, "campeonato": "Brothers Cup", "data": "2026-07-04", "estadio": "VEB Arena" },
     { "mandante": "Botafogo", "visitante": "Corinthians", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-05-17", "estadio": "Nilton Santos", "horario": "16:00" },
     { "mandante": "Chapecoense", "visitante": "Botafogo", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Copa do Brasil 2026", "data": "2026-05-14", "estadio": "Arena Condá", "horario": "18:00" },
     { "mandante": "Atlético-MG", "visitante": "Botafogo", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-05-10", "estadio": "Arena MRV", "horario": "16:00" },
