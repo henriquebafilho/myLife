@@ -3957,6 +3957,24 @@ function Times(time, data) {
                   backgroundColor = "#28166f";
                   letterColor = "white";
                   break;
+            case "Paduano":
+                  nomeAtual = time;
+                  escudo = time;
+                  backgroundColor = "#003a94";
+                  letterColor = "white";
+                  break;
+            case "Petrópolis":
+                  nomeAtual = time;
+                  escudo = time;
+                  backgroundColor = "#fde900";
+                  letterColor = "#003a94";
+                  break;
+            case "Plaza Colonia":
+                  nomeAtual = time;
+                  escudo = time;
+                  backgroundColor = "#048439";
+                  letterColor = "white";
+                  break;
             default:
                   nomeAtual = time;
                   escudo = "escudo";

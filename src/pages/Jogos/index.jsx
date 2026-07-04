@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import './jogos.css';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import MuiTabs from '@mui/material/Tabs';
 import MuiTab from '@mui/material/Tab';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import CakeIcon from '@mui/icons-material/Cake';
 import LinhaJogo from './components/LinhaJogo';
 import Adversarios from './pages/Adversarios';
 import Anos from './pages/Anos';
@@ -14,9 +16,47 @@ import OutrosJogos from './pages/OutrosJogos';
 import Estatisticas from './components/Estatisticas';
 import Times from './Times';
 import common from './common';
+import rawOutros from '../../../database/outros/index';
+
+const MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 
 const meuTime = 'Botafogo';
 const jogos = [...common.jogos].sort((a, b) => b.data.localeCompare(a.data));
+const outrosJogosAll = rawOutros.filter(j => j && typeof j === 'object' && j.mandante);
+
+const hoje = new Date();
+const mmddHoje = String(hoje.getMonth() + 1).padStart(2, '0') + '-' + String(hoje.getDate()).padStart(2, '0');
+const nesteDiaLista = [...common.jogos, ...outrosJogosAll]
+    .filter(j => j.data.slice(5) === mmddHoje)
+    .sort((a, b) => a.data.localeCompare(b.data));
+
+function NesteDiaList({ onSelectEstadio, onSelectAdversario }) {
+    return (
+        <Box>
+            {nesteDiaLista.map(jogo => {
+                const year = jogo.data.slice(0, 4);
+                const isBotafogo = jogo.mandante === meuTime || jogo.visitante === meuTime;
+                return (
+                    <React.Fragment key={jogo.mandante + jogo.visitante + jogo.data}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, my: 3 }}>
+                            <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                            <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: 1 }}>
+                                {year}
+                            </Typography>
+                            <Box sx={{ flex: 1, height: '1px', backgroundColor: '#30363d' }} />
+                        </Box>
+                        <LinhaJogo
+                            meuTime={isBotafogo ? meuTime : null}
+                            jogo={jogo}
+                            onSelectEstadio={onSelectEstadio}
+                            onSelectAdversario={onSelectAdversario}
+                        />
+                    </React.Fragment>
+                );
+            })}
+        </Box>
+    );
+}
 
 function JogosList({ onSelectEstadio, onSelectAdversario }) {
     let currentYear = null;
@@ -104,7 +144,7 @@ export default function Jogos() {
             {/* Tab: Jogos */}
             {tab === 0 && (
                 <Box>
-                    <Box sx={{ mb: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
                         <ToggleButtonGroup
                             value={subTab}
                             exclusive
@@ -114,7 +154,29 @@ export default function Jogos() {
                             <ToggleButton value="botafogo">Botafogo</ToggleButton>
                             <ToggleButton value="outros">Outros Jogos</ToggleButton>
                         </ToggleButtonGroup>
+
+                        <Button
+                            size="small"
+                            startIcon={<CakeIcon />}
+                            onClick={() => setSubTab(v => v === 'nestedia' ? 'botafogo' : 'nestedia')}
+                            variant={subTab === 'nestedia' ? 'contained' : 'outlined'}
+                            sx={{
+                                color: subTab === 'nestedia' ? '#0d1117' : nesteDiaLista.length > 0 ? '#e3b341' : '#8b949e',
+                                borderColor: nesteDiaLista.length > 0 ? '#e3b341' : '#30363d',
+                                backgroundColor: subTab === 'nestedia' ? '#e3b341' : 'transparent',
+                                '&:hover': {
+                                    borderColor: '#e3b341',
+                                    backgroundColor: subTab === 'nestedia' ? '#c9a030' : 'rgba(227,179,65,0.08)',
+                                },
+                            }}
+                        >
+                            Neste dia{nesteDiaLista.length > 0 ? ` (${nesteDiaLista.length})` : ''}
+                        </Button>
                     </Box>
+
+                    {subTab === 'nestedia' && (
+                        <NesteDiaList onSelectEstadio={selectEstadio} onSelectAdversario={selectAdversario} />
+                    )}
                     {subTab === 'botafogo' && (
                         <JogosList onSelectEstadio={selectEstadio} onSelectAdversario={selectAdversario} />
                     )}
