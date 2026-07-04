@@ -14,7 +14,7 @@ let jogos = [
     { "mandante": "Botafogo", "visitante": "Barcelona de Guayaquil", "golsMandante": 0, "golsVisitante": 1, "campeonato": "Libertadores", "data": "2026-03-10", "estadio": "Nilton Santos" },
     { "mandante": "Botafogo", "visitante": "Bangu", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Taça Rio", "data": "2026-03-07", "estadio": "Nilton Santos" },
     { "mandante": "Botafogo", "visitante": "Boavista", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Carioca", "data": "2026-02-28", "estadio": "Nilton Santos" },
-    { "mandante": "Botafogo", "visitante": "Nacional Potosí", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Libertadores", "data": "2026-02-25", "estadio": "Nilton Santos" },
+    { "mandante": "Botafogo", "visitante": "Nacional Potosí", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Libertadores", "data": "2026-02-25", "estadio": "Nilton Santos" },
     { "mandante": "Botafogo", "visitante": "Flamengo", "golsMandante": 1, "golsVisitante": 2, "campeonato": "Carioca", "data": "2026-02-15", "estadio": "Nilton Santos" },
     { "mandante": "Fluminense", "visitante": "Botafogo", "golsMandante": 1, "golsVisitante": 0, "campeonato": "Série A", "data": "2026-02-12", "estadio": "Maracanã" },
     { "mandante": "Vasco", "visitante": "Botafogo", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Carioca", "data": "2026-02-08", "estadio": "São Januário" },
