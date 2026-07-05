@@ -3,6 +3,7 @@ import './jogos.css';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Pagination from '@mui/material/Pagination';
 import MuiTabs from '@mui/material/Tabs';
 import MuiTab from '@mui/material/Tab';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -28,7 +29,7 @@ const hoje = new Date();
 const mmddHoje = String(hoje.getMonth() + 1).padStart(2, '0') + '-' + String(hoje.getDate()).padStart(2, '0');
 const nesteDiaLista = [...common.jogos, ...outrosJogosAll]
     .filter(j => j.data.slice(5) === mmddHoje)
-    .sort((a, b) => a.data.localeCompare(b.data));
+    .sort((a, b) => b.data.localeCompare(a.data));
 
 function NesteDiaList({ onSelectEstadio, onSelectAdversario }) {
     return (
@@ -58,11 +59,22 @@ function NesteDiaList({ onSelectEstadio, onSelectAdversario }) {
     );
 }
 
+const JOGOS_POR_PAGINA = 20;
+
 function JogosList({ onSelectEstadio, onSelectAdversario }) {
+    const [page, setPage] = useState(1);
+    const totalPages = Math.ceil(jogos.length / JOGOS_POR_PAGINA);
+    const jogosPagina = jogos.slice((page - 1) * JOGOS_POR_PAGINA, page * JOGOS_POR_PAGINA);
+
+    const handlePageChange = (_, value) => {
+        setPage(value);
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
     let currentYear = null;
     return (
         <Box>
-            {jogos.map(jogo => {
+            {jogosPagina.map(jogo => {
                 const year = jogo.data.split('-')[0];
                 const showDivider = year !== currentYear;
                 currentYear = year;
@@ -86,6 +98,9 @@ function JogosList({ onSelectEstadio, onSelectAdversario }) {
                     </React.Fragment>
                 );
             })}
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
+            </Box>
         </Box>
     );
 }

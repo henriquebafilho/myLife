@@ -12,7 +12,6 @@ import MapIcon from '@mui/icons-material/Map';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import 'flag-icons/css/flag-icons.min.css';
 import common from '../common';
 import estadiosLocais from '../estadiosLocais';
 import coordenadas from '../estadiosCoordenadas';

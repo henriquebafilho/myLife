@@ -5,7 +5,6 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import 'flag-icons/css/flag-icons.min.css';
 import Times from '../Times';
 import common from '../common';
 import paises from '../paises';
@@ -105,17 +104,6 @@ export default function Adversarios({ meuTime, selectedAdversario, onSelectEstad
         });
     }, [search, filtro, todosAdversarios]);
 
-    if (adversarioAtual) {
-        return (
-            <ViewAdversario
-                meuTime={meuTime}
-                adversario={adversarioAtual}
-                onBack={() => setAdversarioAtual(null)}
-                onSelectEstadio={onSelectEstadio}
-            />
-        );
-    }
-
     const byPais = useMemo(() => {
         if (filtro !== 'internacionais') return null;
         const map = {};
@@ -145,7 +133,19 @@ export default function Adversarios({ meuTime, selectedAdversario, onSelectEstad
                 return totalB - totalA;
             })
             .map(e => ({ estado: e, ...map[e] }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filtro, filtered]);
+
+    if (adversarioAtual) {
+        return (
+            <ViewAdversario
+                meuTime={meuTime}
+                adversario={adversarioAtual}
+                onBack={() => setAdversarioAtual(null)}
+                onSelectEstadio={onSelectEstadio}
+            />
+        );
+    }
 
     return (
         <Box>

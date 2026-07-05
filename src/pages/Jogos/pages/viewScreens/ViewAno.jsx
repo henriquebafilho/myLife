@@ -8,7 +8,7 @@ import Estatisticas from '../../components/Estatisticas';
 export default function ViewAno({ meuTime, jogosAno, ano, onBack, onSelectAdversario, onSelectEstadio }) {
     useEffect(() => { window.scrollTo({ top: 0, behavior: 'auto' }); }, [ano]);
 
-    const jogos = [...jogosAno].sort((a, b) => b.data.localeCompare(a.data));
+    const jogos = [...jogosAno].sort((a, b) => a.data.localeCompare(b.data));
     const imagemAno = import.meta.env.BASE_URL + 'anos/' + ano + '.png';
 
     return (
