@@ -747,12 +747,12 @@ let cds = [
     {
         banda: "Megadeth",
         ano: 1985,
-        album: "Killing is My Business... and Business is Good! "
+        album: "Killing is My Business... and Business is Good!"
     },
     {
         banda: "Megadeth",
         ano: 1986,
-        album: "Peace Sells... but Who's Buying?"
+        album: "Peace Sells... but Who's Buying"
     },
     {
         banda: "Megadeth",
