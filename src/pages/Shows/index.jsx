@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import MuiTabs from '@mui/material/Tabs';
@@ -132,13 +133,20 @@ function ShowCard({ show, onSelectLocal }) {
 }
 
 
+const TAB_PATHS = ['/shows', '/shows/bandas', '/shows/locais'];
+
 export default function Shows() {
-    const [tab, setTab] = useState(0);
+    const navigate = useNavigate();
+    const location = useLocation();
     const [bandaSearch, setBandaSearch] = useState('');
     const [localSearch, setLocalSearch] = useState('');
 
+    const tab = location.pathname.startsWith('/shows/bandas') ? 1
+        : location.pathname.startsWith('/shows/locais') ? 2
+        : 0;
+
     const selectLocal = (local) => {
-        setTab(2);
+        navigate('/shows/locais');
         setLocalSearch(local);
         window.scrollTo({ top: 0, behavior: 'auto' });
     };
@@ -178,7 +186,7 @@ export default function Shows() {
             {/* Tabs */}
             <MuiTabs
                 value={tab}
-                onChange={(_, v) => { setTab(v); window.scrollTo({ top: 0, behavior: 'auto' }); }}
+                onChange={(_, v) => { navigate(TAB_PATHS[v]); window.scrollTo({ top: 0, behavior: 'auto' }); }}
                 sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
             >
                 <MuiTab label="Eventos" />
@@ -186,8 +194,8 @@ export default function Shows() {
                 <MuiTab label="Local" />
             </MuiTabs>
 
-            {/* Eventos */}
-            {tab === 0 && (
+            <Routes>
+                <Route path="/" element={
                 <Box>
                     {(() => {
                         let currentYear = null;
@@ -217,10 +225,9 @@ export default function Shows() {
                         });
                     })()}
                 </Box>
-            )}
+                } />
 
-            {/* Bandas */}
-            {tab === 1 && (
+                <Route path="bandas" element={
                 <Box>
                     <Box sx={{
                         display: 'flex', alignItems: 'center', gap: 1,
@@ -259,10 +266,9 @@ export default function Shows() {
                         </Accordion>
                     ))}
                 </Box>
-            )}
+                } />
 
-            {/* Por Local */}
-            {tab === 2 && (
+                <Route path="locais" element={
                 <Box>
                     <Box sx={{
                         display: 'flex', alignItems: 'center', gap: 1,
@@ -301,7 +307,8 @@ export default function Shows() {
                         </Accordion>
                     ))}
                 </Box>
-            )}
+                } />
+            </Routes>
 
         </Box>
     );

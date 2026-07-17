@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,12 +22,12 @@ import LinhaDoTempo from '../pages/LinhaDoTempo/index';
 
 const RAIL_WIDTH = 65;
 
-const screenMap = {
-    home: Home,
-    jogos: Jogos,
-    shows: Shows,
-    cds: CDs,
-    timeline: LinhaDoTempo,
+const TOP_PATHS = {
+    home: '/',
+    jogos: '/jogos',
+    shows: '/shows',
+    cds: '/cds',
+    timeline: '/timeline',
 };
 
 const navItems = [
@@ -39,11 +39,17 @@ const navItems = [
 ];
 
 export default function Topbar() {
-    const [currentScreen, setCurrentScreen] = useState('home');
-    const CurrentContent = screenMap[currentScreen];
+    const routerNavigate = useNavigate();
+    const location = useLocation();
+
+    const currentScreen = location.pathname.startsWith('/jogos') ? 'jogos'
+        : location.pathname.startsWith('/shows') ? 'shows'
+        : location.pathname.startsWith('/cds') ? 'cds'
+        : location.pathname.startsWith('/timeline') ? 'timeline'
+        : 'home';
 
     const navigate = (key) => {
-        setCurrentScreen(key);
+        routerNavigate(TOP_PATHS[key]);
         window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
@@ -108,7 +114,13 @@ export default function Topbar() {
                 mb: { xs: '56px', md: 0 },
             }}>
                 <div key={currentScreen} className="page-transition">
-                    <CurrentContent onNavigate={setCurrentScreen} />
+                    <Routes>
+                        <Route path="/" element={<Home onNavigate={navigate} />} />
+                        <Route path="/jogos/*" element={<Jogos />} />
+                        <Route path="/shows/*" element={<Shows />} />
+                        <Route path="/cds/*" element={<CDs />} />
+                        <Route path="/timeline" element={<LinhaDoTempo />} />
+                    </Routes>
                 </div>
             </Box>
 

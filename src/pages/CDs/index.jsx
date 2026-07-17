@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -68,9 +69,14 @@ function CDCard({ cd }) {
     );
 }
 
+const TAB_PATHS = ['/cds', '/cds/bandas'];
+
 export default function CDs() {
-    const [view, setView] = useState('todos');
+    const navigate = useNavigate();
+    const location = useLocation();
     const [search, setSearch] = useState('');
+
+    const view = location.pathname.startsWith('/cds/bandas') ? 'bandas' : 'todos';
 
     const grouped = cds.reduce((acc, cd) => {
         if (!acc[cd.banda]) acc[cd.banda] = [];
@@ -91,7 +97,7 @@ export default function CDs() {
                 <ToggleButtonGroup
                     value={view}
                     exclusive
-                    onChange={(_, v) => { if (v) { setView(v); setSearch(''); } }}
+                    onChange={(_, v) => { if (v) { navigate(TAB_PATHS[v === 'bandas' ? 1 : 0]); setSearch(''); } }}
                     size="small"
                 >
                     <ToggleButton value="todos">Todos</ToggleButton>
@@ -99,17 +105,16 @@ export default function CDs() {
                 </ToggleButtonGroup>
             </Box>
 
-            {/* Todos — flat grid, no grouping */}
-            {view === 'todos' && (
+            <Routes>
+            <Route path="/" element={
                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 3 }}>
                     {cds.map(cd => (
                         <CDCard key={cd.banda + cd.album} cd={cd} />
                     ))}
                 </Box>
-            )}
+            } />
 
-            {/* Por Banda — accordion with search */}
-            {view === 'bandas' && (
+            <Route path="bandas" element={
                 <Box>
                     <Box sx={{
                         display: 'flex', alignItems: 'center', gap: 1,
@@ -150,7 +155,8 @@ export default function CDs() {
                         </Accordion>
                     ))}
                 </Box>
-            )}
+            } />
+            </Routes>
 
         </Box>
     );
