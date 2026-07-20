@@ -148,7 +148,6 @@ export default function Shows() {
     const selectLocal = (local) => {
         navigate('/shows/locais');
         setLocalSearch(local);
-        window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     const normalize = str => str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -186,7 +185,7 @@ export default function Shows() {
             {/* Tabs */}
             <MuiTabs
                 value={tab}
-                onChange={(_, v) => { navigate(TAB_PATHS[v]); window.scrollTo({ top: 0, behavior: 'auto' }); }}
+                onChange={(_, v) => navigate(TAB_PATHS[v])}
                 sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
             >
                 <MuiTab label="Eventos" />

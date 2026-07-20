@@ -15,6 +15,7 @@ import Album from '@mui/icons-material/Album';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import CDs from '../pages/CDs/index';
 import VoltarAoTopo from './VoltarAoTopo';
+import ScrollRestoration from './ScrollRestoration';
 import Jogos from '../pages/Jogos/index';
 import Shows from '../pages/Shows/index';
 import Home from '../pages/Home/index';
@@ -48,13 +49,12 @@ export default function Topbar() {
         : location.pathname.startsWith('/timeline') ? 'timeline'
         : 'home';
 
-    const navigate = (key) => {
-        routerNavigate(TOP_PATHS[key]);
-        window.scrollTo({ top: 0, behavior: 'auto' });
-    };
+    const navigate = (key) => routerNavigate(TOP_PATHS[key]);
 
     return (
         <>
+            <ScrollRestoration />
+
             {/* AppBar */}
             <AppBar position="fixed" sx={{ zIndex: 1300 }}>
                 <Toolbar>

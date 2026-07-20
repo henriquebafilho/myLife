@@ -112,7 +112,7 @@ const TAB_PATHS = ['/jogos', '/jogos/anos', '/jogos/estadios', '/jogos/adversari
 
 function JogosTab({ subTab, onSelectEstadio, onSelectAdversario }) {
     const navigate = useNavigate();
-    const goToSubTab = (v) => { navigate(SUBTAB_PATHS[v]); window.scrollTo({ top: 0, behavior: 'auto' }); };
+    const goToSubTab = (v) => navigate(SUBTAB_PATHS[v]);
 
     return (
         <Box>
@@ -163,13 +163,11 @@ export default function Jogos() {
 
     const selectEstadio = (estadio) => {
         navigate(`/jogos/estadios/${slugify(estadio)}`);
-        window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     const selectAdversario = (adversario) => {
         const nomeAtual = Times(adversario).nomeAtual;
         navigate(`/jogos/adversarios/${slugify(nomeAtual)}`);
-        window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     const tab = location.pathname.startsWith('/jogos/anos') ? 1
@@ -198,7 +196,7 @@ export default function Jogos() {
             {/* Tabs */}
             <MuiTabs
                 value={tab}
-                onChange={(_, v) => { navigate(TAB_PATHS[v]); window.scrollTo({ top: 0, behavior: 'auto' }); }}
+                onChange={(_, v) => navigate(TAB_PATHS[v])}
                 sx={{ mb: 3, borderBottom: '1px solid #30363d' }}
             >
                 <MuiTab label="Jogos" />
