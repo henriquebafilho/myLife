@@ -88,6 +88,12 @@ export default function CDs() {
 
     const normalize = str => str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     const filteredBands = bands.filter(b => normalize(b).includes(normalize(search)));
+    const filteredCds = cds.filter(cd => {
+        const term = normalize(search);
+        return normalize(cd.banda).includes(term)
+            || normalize(cd.album).includes(term)
+            || String(cd.ano).includes(search.trim());
+    });
 
     return (
         <Box sx={{ mt: '80px', px: { xs: 2, md: 4 }, pb: 6 }}>
@@ -107,10 +113,30 @@ export default function CDs() {
 
             <Routes>
             <Route path="/" element={
-                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 3 }}>
-                    {cds.map(cd => (
-                        <CDCard key={cd.banda + cd.album} cd={cd} />
-                    ))}
+                <Box>
+                    <Box sx={{
+                        display: 'flex', alignItems: 'center', gap: 1,
+                        mb: 3, px: 2, py: 1,
+                        backgroundColor: '#161b22',
+                        border: '1px solid #30363d',
+                        borderRadius: '8px',
+                    }}>
+                        <SearchIcon sx={{ color: '#8b949e', fontSize: 20 }} />
+                        <InputBase
+                            placeholder="Buscar banda, álbum ou ano..."
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                            sx={{ flex: 1, color: 'text.primary', fontSize: '0.95rem' }}
+                        />
+                    </Box>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+                        {filteredCds.length} {filteredCds.length === 1 ? 'CD encontrado' : 'CDs encontrados'}
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 3 }}>
+                        {filteredCds.map(cd => (
+                            <CDCard key={cd.banda + cd.album} cd={cd} />
+                        ))}
+                    </Box>
                 </Box>
             } />
 

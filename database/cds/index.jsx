@@ -320,6 +320,11 @@ let cds = [
         album: "Under Attack"
     },
     {
+        banda: "Diabo Verde",
+        ano: 2016,
+        album: "Veni, Vidi, Vici!"
+    },
+    {
         banda: "Dio",
         ano: 1983,
         album: "At Donington UK - Live 1983 & 1987"
@@ -926,6 +931,11 @@ let cds = [
     },
     {
         banda: "Motorhead",
+        ano: 1986,
+        album: "Orgasmatron"
+    },
+    {
+        banda: "Motorhead",
         ano: 2015,
         album: "Bad Magic"
     },
@@ -958,6 +968,11 @@ let cds = [
         banda: "Oasis",
         ano: 1995,
         album: "(What's the Story) Morning Glory?"
+    },
+    {
+        banda: "Oasis",
+        ano: 1997,
+        album: "Be Here Now"
     },
     {
         banda: "Ozzy Osbourne",
