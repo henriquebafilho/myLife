@@ -54,7 +54,7 @@ export default function LinhaJogo({ meuTime, jogo, onSelectAdversario, onSelectE
 
     const mandanteClickable = !disableTeamClick && jogo.mandante !== meuTime && !!onSelectAdversario;
     const visitanteClickable = !disableTeamClick && jogo.visitante !== meuTime && !!onSelectAdversario;
-    const estadioClickable = !!jogo.estadio && jogo.estadio !== '' && !!onSelectEstadio && !disableEstadioClick;
+    const estadioClickable = !!jogo.estadio && jogo.estadio !== '' && jogo.estadio[0] !== '(' && !!onSelectEstadio && !disableEstadioClick;
 
     const resultado = getResultado(jogo, meuTime);
     const hasScore = jogo.golsMandante !== '' && jogo.golsVisitante !== '';

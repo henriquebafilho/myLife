@@ -2,14 +2,22 @@ import React, { useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import 'flag-icons/css/flag-icons.min.css';
 import LinhaJogo from '../../components/LinhaJogo';
 import Estatisticas from '../../components/Estatisticas';
 import Times from '../../Times';
 import common from '../../common';
+import estados from '../../estados';
+import paises from '../../paises';
 
 export default function ViewAdversario({ meuTime, adversario, onBack, onSelectEstadio }) {
     const meuTimeStyle = Times(meuTime);
     const adversarioStyle = Times(adversario);
+
+    const infoPais = paises[adversario];
+    const infoEstado = estados[adversario];
+    const bandeira = infoPais?.codigo || 'br';
+    const localTexto = infoPais ? infoPais.pais : (infoEstado && `${infoEstado.estado} (${infoEstado.uf})`);
 
     const jogosAdversario = useMemo(() => {
         const allNames = [adversario, ...Times(adversario).nomesAnteriores];
@@ -79,6 +87,13 @@ export default function ViewAdversario({ meuTime, adversario, onBack, onSelectEs
                     </Box>
                 </Box>
             </Box>
+
+            {localTexto && (
+                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 3 }}>
+                    <span className={`fi fi-${bandeira}`} style={{ fontSize: '1rem', borderRadius: '2px' }} />
+                    {localTexto}
+                </Typography>
+            )}
 
             <Estatisticas meuTime={meuTime} jogos={jogosAdversario} />
 
