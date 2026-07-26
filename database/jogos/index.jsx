@@ -1,4 +1,5 @@
 let jogos = [
+    { "mandante": "Botafogo", "visitante": "Vitória", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-07-23", "estadio": "Nilton Santos", "horario": "19:30" },
     { "mandante": "Botafogo", "visitante": "Santos", "golsMandante": 2, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-07-16", "estadio": "Nilton Santos", "horario": "19:30" },
     { "mandante": "Botafogo", "visitante": "Corinthians", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-05-17", "estadio": "Nilton Santos", "horario": "16:00" },
     { "mandante": "Chapecoense", "visitante": "Botafogo", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Copa do Brasil 2026", "data": "2026-05-14", "estadio": "Arena Condá", "horario": "18:00" },
