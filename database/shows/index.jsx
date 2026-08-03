@@ -1136,6 +1136,16 @@ let shows = [
         data: "16/01/2026",
         local: "Circo Voador"
     },
+    {
+        evento: "Tomarock 23 Anos",
+        bandas: [
+            "Dead Fish",
+            "Rancore",
+            "Dredout"
+        ],
+        data: "31/07/2026",
+        local: "Circo Voador"
+    },
 ];
 
 export default shows;
