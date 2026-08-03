@@ -419,6 +419,12 @@ let shows = [
 
     },
     {
+        evento: "Arraiá do Circo Voador",
+        bandas: ["Geraldo Azevedo"],
+        data: "01/07/2017",
+        local: "Circo Voador"
+    },
+    {
         evento: "Matanza Fest",
         bandas: [
             "Matanza",
