@@ -1,4 +1,7 @@
 let jogos = [
+    { "mandante": "Botafogo", "visitante": "Athletico-PR", "golsMandante": 2, "golsVisitante": 3, "campeonato": "Brasileirão 2026", "data": "2026-08-24", "estadio": "Nilton Santos", "horario": "20:00" },
+    { "mandante": "Botafogo", "visitante": "Cienciano", "golsMandante": 1, "golsVisitante": 0, "campeonato": "Copa Sul-Americana 2026", "data": "2026-08-20", "estadio": "Nilton Santos", "horario": "21:30" },
+    { "mandante": "Botafogo", "visitante": "Fluminense", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-08-08", "estadio": "Nilton Santos", "horario": "21:00" },
     { "mandante": "Botafogo", "visitante": "Vitória", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-07-23", "estadio": "Nilton Santos", "horario": "19:30" },
     { "mandante": "Botafogo", "visitante": "Santos", "golsMandante": 2, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-07-16", "estadio": "Nilton Santos", "horario": "19:30" },
     { "mandante": "Botafogo", "visitante": "Corinthians", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-05-17", "estadio": "Nilton Santos", "horario": "16:00" },
