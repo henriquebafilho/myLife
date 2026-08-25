@@ -213,6 +213,7 @@ const estadiosLocais = {
     "Hernando Siles":                       { cidade: "La Paz", pais: "Bolívia", codigo: "bo" },
     "Home Park":                            { cidade: "Plymouth", pais: "Inglaterra", codigo: "gb" },
     "Houphouet Boigny":                     { cidade: "Abidjã", pais: "Costa do Marfim", codigo: "ci" },
+    "Inca Garcilaso de La Vega":            { cidade: "Cusco", pais: "Peru", codigo: "pe" },
     "Independence Park":                    { cidade: "Kingston", pais: "Jamaica", codigo: "jm" },
     "Ipatingão":                            { cidade: "Ipatinga", estado: "Minas Gerais", uf: "MG" },
     "Israel Pinheiro (Brasília)":           { cidade: "Guará", estado: "Distrito Federal", uf: "DF" },

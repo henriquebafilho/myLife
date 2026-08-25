@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'flag-icons/css/flag-icons.min.css';
@@ -38,6 +39,7 @@ function LocalizacaoEstadio({ estadio }) {
             </Box>
             {texto && (
                 <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <LocationOnIcon sx={{ fontSize: '1.1rem' }} />
                     <span className={`fi fi-${codigoBandeira}`} style={{ fontSize: '1rem', borderRadius: '2px' }} />
                     {texto}
                 </Typography>

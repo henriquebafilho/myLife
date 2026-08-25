@@ -190,6 +190,7 @@ const coordenadas = {
     "Home Park":                             [50.3877, -4.1508],
     "Houphouet Boigny":                      [5.2895, -4.0068],
     "Ilha do Retiro":                        [-8.0522, -34.9075],
+    "Inca Garcilaso de La Vega":             [-13.525, -71.966],
     "Independence Park":                     [17.9719, -76.7924],
     "Independência":                         [-19.9281, -43.945],
     "Ipatingão":                             [-19.4699, -42.5364],
