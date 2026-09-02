@@ -291,8 +291,18 @@ let cds = [
     },
     {
         banda: "Dead Fish",
+        ano: 2015,
+        album: "Vitória"
+    },
+    {
+        banda: "Dead Fish",
         ano: 2019,
         album: "Ponto Cego"
+    },
+    {
+        banda: "Dead Fish",
+        ano: 2024,
+        album: "Labirinto da Memória"
     },
     {
         banda: "Death",
@@ -418,6 +428,11 @@ let cds = [
         banda: "Hatebreed",
         ano: 2003,
         album: "The Rise of Brutality"
+    },
+    {
+        banda: "Hatebreed",
+        ano: 2006,
+        album: "Supremacy"
     },
     {
         banda: "Hatebreed",
@@ -688,6 +703,11 @@ let cds = [
         banda: "Lamb of God",
         ano: 2022,
         album: "Omens"
+    },
+    {
+        banda: "Lamb of God",
+        ano: 2026,
+        album: "Into Oblivion"
     },
     {
         banda: "Limp Bizkit",
@@ -1066,6 +1086,11 @@ let cds = [
     },
     {
         banda: "Rage Against the Machine",
+        ano: 1996,
+        album: "Evil Empire"
+    },
+    {
+        banda: "Rage Against the Machine",
         ano: 1999,
         album: "The Battle of Los Angeles"
     },
@@ -1093,6 +1118,11 @@ let cds = [
         banda: "Ratos de Porão",
         ano: 1991,
         album: "Anarkophobia"
+    },
+    {
+        banda: "Ratos de Porão",
+        ano: 1992,
+        album: "RDP Vivo"
     },
     {
         banda: "Ratos de Porão",
@@ -1373,6 +1403,11 @@ let cds = [
         banda: "Venom",
         ano: 1982,
         album: "Black Metal"
+    },
+    {
+        banda: "Walls of Jericho",
+        ano: 2008,
+        album: "The American Dream"
     },
     {
         banda: "Woslom",
