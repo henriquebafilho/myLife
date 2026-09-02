@@ -15,7 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import cds from '../../../database/cds/index';
 
 function getCDName(banda, album) {
-    return (banda + " - " + album).replace(/[\/\\]/g, '-');
+    return (banda + " - " + album).replace(/[\/\\?]/g, '-').replace(/[:*"<>|]/g, '');
 }
 
 function CDCard({ cd }) {
