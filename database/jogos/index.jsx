@@ -1,4 +1,7 @@
 let jogos = [
+    { "mandante": "Mirassol", "visitante": "Botafogo", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-09-19", "estadio": "Maião", "horario": "17:00" },
+    { "mandante": "Botafogo", "visitante": "Grêmio", "golsMandante": 3, "golsVisitante": 2, "campeonato": "Brasileirão 2026", "data": "2026-09-16", "estadio": "Nilton Santos", "horario": "19:30" },
+    { "mandante": "Botafogo", "visitante": "Red Bull Bragantino", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-09-12", "estadio": "Nilton Santos", "horario": "20:30" },
     { "mandante": "Botafogo", "visitante": "Palmeiras", "golsMandante": 0, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-09-06", "estadio": "Nilton Santos", "horario": "18:30" },
     { "mandante": "Flamengo", "visitante": "Botafogo", "golsMandante": 3, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-08-30", "estadio": "Maracanã", "horario": "16:00" },
     { "mandante": "Botafogo", "visitante": "Athletico-PR", "golsMandante": 2, "golsVisitante": 3, "campeonato": "Brasileirão 2026", "data": "2026-08-24", "estadio": "Nilton Santos", "horario": "20:00" },
