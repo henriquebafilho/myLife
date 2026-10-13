@@ -1,4 +1,5 @@
 const outros = [
+    { "mandante": "São Cristóvão", "visitante": "Goytacaz", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Carioca Série B1 2026", "data": "2026-10-10", "estadio": "Ronaldo Nazário" },
     { "mandante": "Flamengo", "visitante": "Santos", "golsMandante": 3, "golsVisitante": 1, "campeonato": "Série A 2026", "data": "2026-04-05", "estadio": "Maracanã" },
     { "mandante": "Flamengo", "visitante": "Santos", "golsMandante": 3, "golsVisitante": 2, "campeonato": "Série A 2025", "data": "2025-11-09", "estadio": "Maracanã" },
     { "mandante": "São Cristóvão", "visitante": "Paduano", "golsMandante": 2, "golsVisitante": 0, "campeonato": "Carioca Série B1 2025", "data": "2025-11-01", "estadio": "Ronaldo Nazário" },
