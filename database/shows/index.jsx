@@ -1152,6 +1152,12 @@ let shows = [
         data: "31/07/2026",
         local: "Circo Voador"
     },
+    {
+        evento: "Acústico 20 Anos",
+        bandas: ["Ira!"],
+        data: "16/10/2026",
+        local: "Circo Voador"
+    },
 ];
 
 export default shows;
