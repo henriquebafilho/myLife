@@ -64,6 +64,7 @@ const estados = {
     "Vitória":             { estado: "Bahia",                uf: "BA" },
     "Volta Redonda":       { estado: "Rio de Janeiro",       uf: "RJ" },
     "Ypiranga":            { estado: "Rio Grande do Sul",    uf: "RS" },
+    "Yuracan":             { estado: "Minas Gerais",         uf: "MG" },
 };
 
 export default estados;

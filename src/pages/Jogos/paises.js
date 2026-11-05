@@ -6,6 +6,7 @@ const paises = {
     "Carabobo":                { pais: "Venezuela",  codigo: "ve" },
     "Caracas":                 { pais: "Venezuela",  codigo: "ve" },
     "Colo-Colo":               { pais: "Chile",      codigo: "cl" },
+    "Cienciano":               { pais: "Peru",       codigo: "pe" },
     "César Vallejo":           { pais: "Peru",       codigo: "pe" },
     "Defensa y Justicia":      { pais: "Argentina",  codigo: "ar" },
     "Deportivo Quito":         { pais: "Equador",    codigo: "ec" },
