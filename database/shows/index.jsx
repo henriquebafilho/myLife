@@ -1158,6 +1158,16 @@ let shows = [
         data: "16/10/2026",
         local: "Circo Voador"
     },
+    {
+        evento: "Sepultura: O Último Show",
+        bandas: [
+            "Sepultura",
+            "Metal Allegiance",
+            "Krisiun"
+        ],
+        data: "07/11/2026",
+        local: "Suhai Music Hall"
+    },
 ];
 
 export default shows;
