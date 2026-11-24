@@ -1,5 +1,5 @@
 let jogos = [
-    { "mandante": "Botafogo", "visitante": "São Paulo", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-11-23", "estadio": "Nilton Santos", "horario": "20:00" }, 
+    { "mandante": "Botafogo", "visitante": "São Paulo", "golsMandante": 1, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-11-23", "estadio": "Nilton Santos", "horario": "20:00" },
     { "mandante": "Botafogo", "visitante": "Atlético-MG", "golsMandante": 1, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-11-04", "estadio": "Nilton Santos", "horario": "21:30" },
     { "mandante": "Remo", "visitante": "Botafogo", "golsMandante": 2, "golsVisitante": 1, "campeonato": "Brasileirão 2026", "data": "2026-10-28", "estadio": "Mangueirão", "horario": "21:30" },
     { "mandante": "Internacional", "visitante": "Botafogo", "golsMandante": 3, "golsVisitante": 0, "campeonato": "Brasileirão 2026", "data": "2026-10-24", "estadio": "Beira-Rio", "horario": "16:30" },
